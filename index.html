@@ -7,7 +7,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Padauk:wght@400;700&display=swap" rel="stylesheet">
     <script>
         tailwind.config = {
             theme: {
@@ -147,6 +147,66 @@
             -webkit-text-fill-color: transparent;
             background-clip: text;
         }
+
+        /* Language switcher */
+        .lang-switcher {
+            display: inline-flex;
+            align-items: center;
+            gap: 2px;
+            background: #F5F0E8;
+            border-radius: 9999px;
+            padding: 3px;
+            border: 2px solid #D4A843;
+            box-shadow: 0 0 0 3px rgba(212, 168, 67, 0.15);
+        }
+        .lang-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 14px;
+            border-radius: 9999px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            border: none;
+            background: transparent;
+            color: #888;
+        }
+        .lang-btn.active {
+            background: #D4A843;
+            color: white;
+            box-shadow: 0 2px 8px rgba(212, 168, 67, 0.4);
+        }
+        .lang-btn:not(.active):hover {
+            background: rgba(212, 168, 67, 0.15);
+            color: #1E3A5F;
+        }
+
+        /* Hero language banner */
+        .lang-banner {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: linear-gradient(135deg, #D4A843, #DCBA5A);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 16px rgba(212, 168, 67, 0.35);
+            animation: pulse-soft 2.5s ease-in-out infinite;
+        }
+        .lang-banner:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(212, 168, 67, 0.5);
+        }
+        .lang-banner.hidden-banner { display: none; }
+
+        /* Myanmar font class */
+        .lang-my * { font-family: 'Padauk', 'Myanmar Text', system-ui, sans-serif !important; }
+        .lang-my .font-inter { font-family: 'Padauk', 'Myanmar Text', system-ui, sans-serif !important; }
     </style>
 </head>
 <body class="bg-white text-dark-text">
@@ -164,11 +224,16 @@
                     <span class="text-navy font-bold text-lg hidden sm:inline">Mingalar Edu</span>
                 </a>
                 <div class="hidden md:flex items-center gap-6 text-sm font-medium text-dark-text">
-                    <a href="#countries" class="hover:text-navy transition">Countries</a>
-                    <a href="#how-it-works" class="hover:text-navy transition">How It Works</a>
-                    <a href="#fair" class="hover:text-navy transition">Education Fair</a>
-                    <a href="#faq" class="hover:text-navy transition">FAQ</a>
-                    <a href="#register" class="cta-btn bg-gold text-white px-5 py-2.5 rounded-lg font-semibold text-sm">
+                    <a href="#countries" class="hover:text-navy transition" data-i18n="nav_countries">Countries</a>
+                    <a href="#how-it-works" class="hover:text-navy transition" data-i18n="nav_how">How It Works</a>
+                    <a href="#fair" class="hover:text-navy transition" data-i18n="nav_fair">Education Fair</a>
+                    <a href="#faq" class="hover:text-navy transition" data-i18n="nav_faq">FAQ</a>
+                    <!-- Language Switcher (Desktop) -->
+                    <div class="lang-switcher" id="lang-switcher-desktop">
+                        <button class="lang-btn active" data-lang="en" onclick="setLanguage('en')">EN</button>
+                        <button class="lang-btn" data-lang="my" onclick="setLanguage('my')">မြန်မာ</button>
+                    </div>
+                    <a href="#register" class="cta-btn bg-gold text-white px-5 py-2.5 rounded-lg font-semibold text-sm" data-i18n="nav_cta">
                         Free Consultation
                     </a>
                 </div>
@@ -183,11 +248,18 @@
         <!-- Mobile menu -->
         <div id="mobile-menu" class="hidden md:hidden bg-white border-t">
             <div class="px-4 py-4 space-y-3">
-                <a href="#countries" class="block py-2 text-dark-text font-medium" onclick="toggleMobileMenu()">Countries</a>
-                <a href="#how-it-works" class="block py-2 text-dark-text font-medium" onclick="toggleMobileMenu()">How It Works</a>
-                <a href="#fair" class="block py-2 text-dark-text font-medium" onclick="toggleMobileMenu()">Education Fair</a>
-                <a href="#faq" class="block py-2 text-dark-text font-medium" onclick="toggleMobileMenu()">FAQ</a>
-                <a href="#register" class="block cta-btn bg-gold text-white px-5 py-3 rounded-lg font-semibold text-center" onclick="toggleMobileMenu()">
+                <!-- Language Switcher (Mobile) - Prominent at top -->
+                <div class="flex justify-center pb-3 border-b border-gray-100">
+                    <div class="lang-switcher" id="lang-switcher-mobile">
+                        <button class="lang-btn active" data-lang="en" onclick="setLanguage('en')">EN English</button>
+                        <button class="lang-btn" data-lang="my" onclick="setLanguage('my')">မြန်မာ</button>
+                    </div>
+                </div>
+                <a href="#countries" class="block py-2 text-dark-text font-medium" data-i18n="nav_countries" onclick="toggleMobileMenu()">Countries</a>
+                <a href="#how-it-works" class="block py-2 text-dark-text font-medium" data-i18n="nav_how" onclick="toggleMobileMenu()">How It Works</a>
+                <a href="#fair" class="block py-2 text-dark-text font-medium" data-i18n="nav_fair" onclick="toggleMobileMenu()">Education Fair</a>
+                <a href="#faq" class="block py-2 text-dark-text font-medium" data-i18n="nav_faq" onclick="toggleMobileMenu()">FAQ</a>
+                <a href="#register" class="block cta-btn bg-gold text-white px-5 py-3 rounded-lg font-semibold text-center" data-i18n="nav_cta" onclick="toggleMobileMenu()">
                     Free Consultation
                 </a>
             </div>
@@ -205,51 +277,58 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 sm:py-32 w-full">
             <div class="grid lg:grid-cols-2 gap-12 items-center">
                 <div class="animate-fade-in-up">
+                    <!-- Myanmar language banner (shown only when English is active) -->
+                    <div id="lang-banner" class="lang-banner mb-6" onclick="setLanguage('my')">
+                        <span style="font-size:20px">🇲🇲</span>
+                        <span style="font-family:'Padauk','Myanmar Text',sans-serif">မြန်မာဘာသာဖြင့် ဖတ်ရှုရန် နှိပ်ပါ</span>
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                    </div>
+
                     <!-- Fair badge -->
                     <div class="inline-flex items-center gap-2 bg-white border border-gold/30 rounded-full px-4 py-2 mb-6 shadow-sm fair-badge">
                         <span class="w-2 h-2 bg-gold rounded-full"></span>
-                        <span class="text-sm font-medium text-navy">Education Fair: March 28-29, 2026 — Yangon</span>
+                        <span class="text-sm font-medium text-navy" data-i18n="hero_fair_badge">Education Fair: March 28-29, 2026 — Yangon</span>
                     </div>
 
                     <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold leading-tight mb-6">
-                        <span class="text-navy">Your Dream.</span><br>
-                        <span class="text-navy">Our Mission.</span><br>
-                        <span class="gradient-text">Study Abroad</span>
-                        <span class="text-gold"> Starts Here.</span>
+                        <span class="text-navy" data-i18n="hero_h1_1">Your Dream.</span><br>
+                        <span class="text-navy" data-i18n="hero_h1_2">Our Mission.</span><br>
+                        <span class="gradient-text" data-i18n="hero_h1_3">Study Abroad</span>
+                        <span class="text-gold" data-i18n="hero_h1_4"> Starts Here.</span>
                     </h1>
 
-                    <p class="text-lg sm:text-xl text-dark-text/80 mb-4 max-w-lg leading-relaxed">
+                    <p class="text-lg sm:text-xl text-dark-text/80 mb-4 max-w-lg leading-relaxed" data-i18n-html="hero_desc">
                         Compare <strong class="text-navy">8 countries</strong> with <strong class="text-navy">1 trusted partner</strong>.
                         From visa to campus life — we handle everything so you can focus on your future.
                     </p>
 
-                    <p class="text-base text-mid-gray mb-8 max-w-lg">
+                    <p class="text-base text-mid-gray mb-8 max-w-lg" data-i18n-html="hero_trust">
                         Trusted by <strong class="text-navy">TUN YADANAR School</strong> (1,000+ students) in Mandalay.
                         Now serving students across Myanmar.
                     </p>
 
                     <div class="flex flex-col sm:flex-row gap-4">
-                        <a href="#register" class="cta-btn bg-gold text-white px-8 py-4 rounded-lg font-bold text-lg text-center">
+                        <a href="#register" class="cta-btn bg-gold text-white px-8 py-4 rounded-lg font-bold text-lg text-center" data-i18n="hero_cta">
                             Get Free Consultation &rarr;
                         </a>
-                        <a href="#countries" class="border-2 border-navy/20 text-navy px-8 py-4 rounded-lg font-semibold text-lg text-center hover:border-navy/40 transition">
+                        <a href="#countries" class="border-2 border-navy/20 text-navy px-8 py-4 rounded-lg font-semibold text-lg text-center hover:border-navy/40 transition" data-i18n="hero_explore">
                             Explore Countries
                         </a>
                     </div>
 
                     <!-- Trust indicators -->
-                    <div class="mt-10 flex items-center gap-6 text-sm text-mid-gray">
+                    <div class="mt-10 flex flex-wrap items-center gap-4 sm:gap-6 text-sm text-mid-gray">
                         <div class="flex items-center gap-2">
                             <svg class="w-5 h-5 text-sage" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
-                            <span>Free Aptitude Test</span>
+                            <span data-i18n="hero_badge_1">Free Aptitude Test</span>
                         </div>
                         <div class="flex items-center gap-2">
                             <svg class="w-5 h-5 text-sage" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
-                            <span>End-to-End Support</span>
+                            <span data-i18n="hero_badge_2">End-to-End Support</span>
                         </div>
                         <div class="flex items-center gap-2">
                             <svg class="w-5 h-5 text-sage" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>
-                            <span>8 Countries</span>
+                            <span data-i18n="hero_badge_3">8 Countries</span>
                         </div>
                     </div>
                 </div>
@@ -294,10 +373,10 @@
     <section class="py-20 sm:py-28 bg-gray-50">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center mb-16 reveal">
-                <h2 class="text-3xl sm:text-4xl font-bold text-navy mb-4">
+                <h2 class="text-3xl sm:text-4xl font-bold text-navy mb-4" data-i18n="pain_title">
                     Studying Abroad Shouldn't Be This Hard
                 </h2>
-                <p class="text-lg text-mid-gray max-w-2xl mx-auto">
+                <p class="text-lg text-mid-gray max-w-2xl mx-auto" data-i18n="pain_desc">
                     Every year, thousands of Myanmar students dream of studying abroad.
                     But the journey is full of obstacles that stop most from ever starting.
                 </p>
@@ -311,8 +390,8 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
                         </svg>
                     </div>
-                    <h3 class="text-xl font-bold text-navy mb-3">Too Much Confusion</h3>
-                    <p class="text-dark-text/70 leading-relaxed mb-4">
+                    <h3 class="text-xl font-bold text-navy mb-3" data-i18n="pain1_title">Too Much Confusion</h3>
+                    <p class="text-dark-text/70 leading-relaxed mb-4" data-i18n="pain1_desc">
                         Which country? Which university? What visa? How much does it cost?
                         The overwhelming number of choices leads to paralysis.
                     </p>
@@ -335,8 +414,8 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
                         </svg>
                     </div>
-                    <h3 class="text-xl font-bold text-navy mb-3">Hidden Costs & Scams</h3>
-                    <p class="text-dark-text/70 leading-relaxed mb-4">
+                    <h3 class="text-xl font-bold text-navy mb-3" data-i18n="pain2_title">Hidden Costs & Scams</h3>
+                    <p class="text-dark-text/70 leading-relaxed mb-4" data-i18n="pain2_desc">
                         Unverified agents charge high fees with no guarantees.
                         Families invest savings only to face visa rejections and broken promises.
                     </p>
@@ -359,8 +438,8 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"/>
                         </svg>
                     </div>
-                    <h3 class="text-xl font-bold text-navy mb-3">Alone After Arrival</h3>
-                    <p class="text-dark-text/70 leading-relaxed mb-4">
+                    <h3 class="text-xl font-bold text-navy mb-3" data-i18n="pain3_title">Alone After Arrival</h3>
+                    <p class="text-dark-text/70 leading-relaxed mb-4" data-i18n="pain3_desc">
                         Even those who make it abroad often struggle alone —
                         no local support, culture shock, and nowhere to turn.
                     </p>
@@ -404,12 +483,12 @@
     <section class="py-20 sm:py-28 bg-white">
         <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
             <div class="reveal">
-                <p class="text-gold font-semibold text-lg mb-4 tracking-wide uppercase">There's a better way</p>
-                <h2 class="text-3xl sm:text-4xl lg:text-5xl font-bold text-navy mb-6 leading-tight">
+                <p class="text-gold font-semibold text-lg mb-4 tracking-wide uppercase" data-i18n="sol_label">There's a better way</p>
+                <h2 class="text-3xl sm:text-4xl lg:text-5xl font-bold text-navy mb-6 leading-tight" data-i18n-html="sol_title">
                     What if you could compare<br class="hidden sm:block">
                     <span class="text-gold">8 countries</span> with <span class="text-gold">1 partner</span>?
                 </h2>
-                <p class="text-lg text-dark-text/70 max-w-2xl mx-auto leading-relaxed mb-10">
+                <p class="text-lg text-dark-text/70 max-w-2xl mx-auto leading-relaxed mb-10" data-i18n="sol_desc">
                     Imagine having a trusted education partner who knows every step —
                     from choosing the right country to settling into your new campus.
                     That's exactly what Mingalar Edu does.
@@ -424,8 +503,8 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"/>
                         </svg>
                     </div>
-                    <h3 class="text-lg font-bold text-navy mb-2">Multi-Country Comparison</h3>
-                    <p class="text-dark-text/60 text-sm">Korea, Thailand, China, UK, Ireland, Spain, Canada, USA — all in one place.</p>
+                    <h3 class="text-lg font-bold text-navy mb-2" data-i18n="sol1_title">Multi-Country Comparison</h3>
+                    <p class="text-dark-text/60 text-sm" data-i18n="sol1_desc">Korea, Thailand, China, UK, Ireland, Spain, Canada, USA — all in one place.</p>
                 </div>
                 <div class="reveal stagger-2 bg-warm-white rounded-2xl p-8 border border-sage/20">
                     <div class="w-16 h-16 bg-sage/10 rounded-full flex items-center justify-center mx-auto mb-5">
@@ -433,8 +512,8 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
                         </svg>
                     </div>
-                    <h3 class="text-lg font-bold text-navy mb-2">End-to-End Support</h3>
-                    <p class="text-dark-text/60 text-sm">Visa, documents, flights, housing, settlement — we walk beside you every step.</p>
+                    <h3 class="text-lg font-bold text-navy mb-2" data-i18n="sol2_title">End-to-End Support</h3>
+                    <p class="text-dark-text/60 text-sm" data-i18n="sol2_desc">Visa, documents, flights, housing, settlement — we walk beside you every step.</p>
                 </div>
                 <div class="reveal stagger-4 bg-warm-white rounded-2xl p-8 border border-sage/20">
                     <div class="w-16 h-16 bg-sage/10 rounded-full flex items-center justify-center mx-auto mb-5">
@@ -442,8 +521,8 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/>
                         </svg>
                     </div>
-                    <h3 class="text-lg font-bold text-navy mb-2">Free Aptitude Test</h3>
-                    <p class="text-dark-text/60 text-sm">Discover which country and program suits you best — completely free.</p>
+                    <h3 class="text-lg font-bold text-navy mb-2" data-i18n="sol3_title">Free Aptitude Test</h3>
+                    <p class="text-dark-text/60 text-sm" data-i18n="sol3_desc">Discover which country and program suits you best — completely free.</p>
                 </div>
             </div>
         </div>
@@ -455,11 +534,11 @@
     <section id="countries" class="py-20 sm:py-28 bg-soft-beige">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center mb-16 reveal">
-                <p class="text-gold font-semibold text-sm mb-3 tracking-wide uppercase">8 Destinations, 1 Platform</p>
-                <h2 class="text-3xl sm:text-4xl font-bold text-navy mb-4">
+                <p class="text-gold font-semibold text-sm mb-3 tracking-wide uppercase" data-i18n="country_label">8 Destinations, 1 Platform</p>
+                <h2 class="text-3xl sm:text-4xl font-bold text-navy mb-4" data-i18n="country_title">
                     Find Your Perfect Study Destination
                 </h2>
-                <p class="text-lg text-dark-text/70 max-w-2xl mx-auto">
+                <p class="text-lg text-dark-text/70 max-w-2xl mx-auto" data-i18n="country_desc">
                     Each country offers unique advantages. Compare tuition, living costs, scholarships,
                     and opportunities — all curated for Myanmar students.
                 </p>
@@ -748,8 +827,8 @@
             </div>
 
             <div class="text-center mt-12 reveal">
-                <p class="text-mid-gray text-sm mb-4">Not sure which country is right for you?</p>
-                <a href="#register" class="cta-btn inline-block bg-gold text-white px-8 py-4 rounded-lg font-bold text-lg">
+                <p class="text-mid-gray text-sm mb-4" data-i18n="country_cta_label">Not sure which country is right for you?</p>
+                <a href="#register" class="cta-btn inline-block bg-gold text-white px-8 py-4 rounded-lg font-bold text-lg" data-i18n="country_cta_btn">
                     Take Free Aptitude Test &rarr;
                 </a>
             </div>
@@ -762,11 +841,11 @@
     <section id="how-it-works" class="py-20 sm:py-28 bg-white">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center mb-16 reveal">
-                <p class="text-gold font-semibold text-sm mb-3 tracking-wide uppercase">Simple Process</p>
-                <h2 class="text-3xl sm:text-4xl font-bold text-navy mb-4">
+                <p class="text-gold font-semibold text-sm mb-3 tracking-wide uppercase" data-i18n="how_label">Simple Process</p>
+                <h2 class="text-3xl sm:text-4xl font-bold text-navy mb-4" data-i18n="how_title">
                     How It Works — 3 Easy Steps
                 </h2>
-                <p class="text-lg text-dark-text/70 max-w-2xl mx-auto">
+                <p class="text-lg text-dark-text/70 max-w-2xl mx-auto" data-i18n="how_desc">
                     We've simplified the entire study abroad journey into three clear steps.
                     You focus on your dreams — we handle the rest.
                 </p>
@@ -783,8 +862,8 @@
                         </div>
                         <div class="absolute -top-2 -right-2 w-10 h-10 bg-gold rounded-full flex items-center justify-center text-white font-bold text-lg shadow-md">1</div>
                     </div>
-                    <h3 class="text-xl font-bold text-navy mb-3">Free Consultation & Aptitude Test</h3>
-                    <p class="text-dark-text/60 leading-relaxed">
+                    <h3 class="text-xl font-bold text-navy mb-3" data-i18n="step1_title">Free Consultation & Aptitude Test</h3>
+                    <p class="text-dark-text/60 leading-relaxed" data-i18n="step1_desc">
                         Take our free aptitude test and meet with a consultant.
                         We'll understand your goals, budget, and preferences to find the perfect match.
                     </p>
@@ -803,8 +882,8 @@
                         </div>
                         <div class="absolute -top-2 -right-2 w-10 h-10 bg-gold rounded-full flex items-center justify-center text-white font-bold text-lg shadow-md">2</div>
                     </div>
-                    <h3 class="text-xl font-bold text-navy mb-3">Application & Visa Support</h3>
-                    <p class="text-dark-text/60 leading-relaxed">
+                    <h3 class="text-xl font-bold text-navy mb-3" data-i18n="step2_title">Application & Visa Support</h3>
+                    <p class="text-dark-text/60 leading-relaxed" data-i18n="step2_desc">
                         We prepare all documents, submit applications, and guide you through
                         the visa process. Our team handles the paperwork — you prepare for your journey.
                     </p>
@@ -820,8 +899,8 @@
                         </div>
                         <div class="absolute -top-2 -right-2 w-10 h-10 bg-gold rounded-full flex items-center justify-center text-white font-bold text-lg shadow-md">3</div>
                     </div>
-                    <h3 class="text-xl font-bold text-navy mb-3">Arrival & Settlement</h3>
-                    <p class="text-dark-text/60 leading-relaxed">
+                    <h3 class="text-xl font-bold text-navy mb-3" data-i18n="step3_title">Arrival & Settlement</h3>
+                    <p class="text-dark-text/60 leading-relaxed" data-i18n="step3_desc">
                         From airport pickup to campus orientation, housing, and local support —
                         you'll never feel alone. We stay connected throughout your study journey.
                     </p>
@@ -1012,10 +1091,10 @@
                     <div>
                         <div class="inline-flex items-center gap-2 bg-white/80 border border-gold/30 rounded-full px-4 py-2 mb-6">
                             <span class="w-2 h-2 bg-warm-red rounded-full animate-pulse"></span>
-                            <span class="text-sm font-semibold text-navy">Limited Spots — Pre-Register Now</span>
+                            <span class="text-sm font-semibold text-navy" data-i18n="fair_badge">Limited Spots — Pre-Register Now</span>
                         </div>
 
-                        <h2 class="text-3xl sm:text-4xl font-bold text-navy mb-4 leading-tight">
+                        <h2 class="text-3xl sm:text-4xl font-bold text-navy mb-4 leading-tight" data-i18n-html="fair_title">
                             Meet Us at the<br>
                             <span class="text-gold">Myanmar Education Fair 2026</span>
                         </h2>
@@ -1150,11 +1229,11 @@
     <section id="faq" class="py-20 sm:py-28 bg-gray-50">
         <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center mb-16 reveal">
-                <p class="text-gold font-semibold text-sm mb-3 tracking-wide uppercase">Questions & Answers</p>
-                <h2 class="text-3xl sm:text-4xl font-bold text-navy mb-4">
+                <p class="text-gold font-semibold text-sm mb-3 tracking-wide uppercase" data-i18n="faq_label">Questions & Answers</p>
+                <h2 class="text-3xl sm:text-4xl font-bold text-navy mb-4" data-i18n="faq_title">
                     Frequently Asked Questions
                 </h2>
-                <p class="text-lg text-dark-text/70">
+                <p class="text-lg text-dark-text/70" data-i18n="faq_desc">
                     Everything you need to know about studying abroad with Mingalar Edu.
                 </p>
             </div>
@@ -1163,91 +1242,91 @@
                 <!-- FAQ 1 -->
                 <div class="bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden">
                     <button class="faq-toggle w-full text-left px-6 py-5 flex items-center justify-between" onclick="toggleFaq(this)">
-                        <span class="font-semibold text-navy pr-4">How much does it cost to use Mingalar Edu's services?</span>
+                        <span class="font-semibold text-navy pr-4" data-i18n="faq1_q">How much does it cost to use Mingalar Edu's services?</span>
                         <svg class="faq-chevron w-5 h-5 text-mid-gray flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
                         </svg>
                     </button>
                     <div class="faq-answer px-6 text-dark-text/70 text-sm leading-relaxed">
-                        Our initial consultation and aptitude test are completely free. Service fees vary depending on the destination country and package you choose. We provide a clear, transparent fee breakdown before you commit to anything. There are no hidden charges.
+                        <span data-i18n="faq1_a">Our initial consultation and aptitude test are completely free. Service fees vary depending on the destination country and package you choose. We provide a clear, transparent fee breakdown before you commit to anything. There are no hidden charges.</span>
                     </div>
                 </div>
 
                 <!-- FAQ 2 -->
                 <div class="bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden">
                     <button class="faq-toggle w-full text-left px-6 py-5 flex items-center justify-between" onclick="toggleFaq(this)">
-                        <span class="font-semibold text-navy pr-4">What if my visa gets rejected?</span>
+                        <span class="font-semibold text-navy pr-4" data-i18n="faq2_q">What if my visa gets rejected?</span>
                         <svg class="faq-chevron w-5 h-5 text-mid-gray flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
                         </svg>
                     </button>
                     <div class="faq-answer px-6 text-dark-text/70 text-sm leading-relaxed">
-                        We have a strong track record with visa applications. If a rejection occurs, we provide free re-application support, help identify the reason for rejection, and prepare a stronger case. We also explore alternative country options if needed.
+                        <span data-i18n="faq2_a">We have a strong track record with visa applications. If a rejection occurs, we provide free re-application support, help identify the reason for rejection, and prepare a stronger case. We also explore alternative country options if needed.</span>
                     </div>
                 </div>
 
                 <!-- FAQ 3 -->
                 <div class="bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden">
                     <button class="faq-toggle w-full text-left px-6 py-5 flex items-center justify-between" onclick="toggleFaq(this)">
-                        <span class="font-semibold text-navy pr-4">Do I need to speak the local language before applying?</span>
+                        <span class="font-semibold text-navy pr-4" data-i18n="faq3_q">Do I need to speak the local language before applying?</span>
                         <svg class="faq-chevron w-5 h-5 text-mid-gray flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
                         </svg>
                     </button>
                     <div class="faq-answer px-6 text-dark-text/70 text-sm leading-relaxed">
-                        Not necessarily! Many programs across our 8 countries offer English-taught courses. For countries like Korea or China, we can help arrange language preparation courses. Our aptitude test also factors in your language skills when recommending destinations.
+                        <span data-i18n="faq3_a">Not necessarily! Many programs across our 8 countries offer English-taught courses. For countries like Korea or China, we can help arrange language preparation courses. Our aptitude test also factors in your language skills when recommending destinations.</span>
                     </div>
                 </div>
 
                 <!-- FAQ 4 -->
                 <div class="bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden">
                     <button class="faq-toggle w-full text-left px-6 py-5 flex items-center justify-between" onclick="toggleFaq(this)">
-                        <span class="font-semibold text-navy pr-4">Can I work while studying abroad?</span>
+                        <span class="font-semibold text-navy pr-4" data-i18n="faq4_q">Can I work while studying abroad?</span>
                         <svg class="faq-chevron w-5 h-5 text-mid-gray flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
                         </svg>
                     </button>
                     <div class="faq-answer px-6 text-dark-text/70 text-sm leading-relaxed">
-                        Most of our destination countries allow part-time work for international students (typically 20 hours/week during semester, full-time during breaks). Countries like Korea, Canada, and Ireland have particularly student-friendly work policies. We'll explain the rules for your chosen destination.
+                        <span data-i18n="faq4_a">Most of our destination countries allow part-time work for international students (typically 20 hours/week during semester, full-time during breaks). Countries like Korea, Canada, and Ireland have particularly student-friendly work policies. We'll explain the rules for your chosen destination.</span>
                     </div>
                 </div>
 
                 <!-- FAQ 5 -->
                 <div class="bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden">
                     <button class="faq-toggle w-full text-left px-6 py-5 flex items-center justify-between" onclick="toggleFaq(this)">
-                        <span class="font-semibold text-navy pr-4">How is Mingalar Edu different from other agencies?</span>
+                        <span class="font-semibold text-navy pr-4" data-i18n="faq5_q">How is Mingalar Edu different from other agencies?</span>
                         <svg class="faq-chevron w-5 h-5 text-mid-gray flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
                         </svg>
                     </button>
                     <div class="faq-answer px-6 text-dark-text/70 text-sm leading-relaxed">
-                        Most agencies focus on just 1-2 countries. We offer 8-country comparison so you make the best choice for your goals and budget. We're backed by TUN YADANAR School in Mandalay (1,000+ students), offer free aptitude testing, and provide full post-arrival support — not just a visa stamp and goodbye.
+                        <span data-i18n="faq5_a">Most agencies focus on just 1-2 countries. We offer 8-country comparison so you make the best choice for your goals and budget. We're backed by TUN YADANAR School in Mandalay (1,000+ students), offer free aptitude testing, and provide full post-arrival support — not just a visa stamp and goodbye.</span>
                     </div>
                 </div>
 
                 <!-- FAQ 6 -->
                 <div class="bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden">
                     <button class="faq-toggle w-full text-left px-6 py-5 flex items-center justify-between" onclick="toggleFaq(this)">
-                        <span class="font-semibold text-navy pr-4">Are there scholarships available for Myanmar students?</span>
+                        <span class="font-semibold text-navy pr-4" data-i18n="faq6_q">Are there scholarships available for Myanmar students?</span>
                         <svg class="faq-chevron w-5 h-5 text-mid-gray flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
                         </svg>
                     </button>
                     <div class="faq-answer px-6 text-dark-text/70 text-sm leading-relaxed">
-                        Yes! Each country offers different scholarship programs. Korea has KGSP (Korean Government Scholarship), China offers CSC scholarships, UK has Chevening, and many universities offer their own merit-based aid. We maintain a comprehensive scholarship database and help with applications.
+                        <span data-i18n="faq6_a">Yes! Each country offers different scholarship programs. Korea has KGSP (Korean Government Scholarship), China offers CSC scholarships, UK has Chevening, and many universities offer their own merit-based aid. We maintain a comprehensive scholarship database and help with applications.</span>
                     </div>
                 </div>
 
                 <!-- FAQ 7 -->
                 <div class="bg-white rounded-xl border border-gray-100 shadow-sm overflow-hidden">
                     <button class="faq-toggle w-full text-left px-6 py-5 flex items-center justify-between" onclick="toggleFaq(this)">
-                        <span class="font-semibold text-navy pr-4">What should I bring to the Education Fair?</span>
+                        <span class="font-semibold text-navy pr-4" data-i18n="faq7_q">What should I bring to the Education Fair?</span>
                         <svg class="faq-chevron w-5 h-5 text-mid-gray flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
                         </svg>
                     </button>
                     <div class="faq-answer px-6 text-dark-text/70 text-sm leading-relaxed">
-                        Bring your latest academic transcripts/report cards, a copy of your passport (if available), and any English proficiency test scores you may have. Most importantly, bring your questions and curiosity! Pre-registered visitors get priority consultation time.
+                        <span data-i18n="faq7_a">Bring your latest academic transcripts/report cards, a copy of your passport (if available), and any English proficiency test scores you may have. Most importantly, bring your questions and curiosity! Pre-registered visitors get priority consultation time.</span>
                     </div>
                 </div>
             </div>
@@ -1262,11 +1341,11 @@
             <div class="grid lg:grid-cols-2 gap-12 lg:gap-16 items-start">
                 <!-- Left: CTA copy -->
                 <div class="reveal">
-                    <p class="text-gold font-semibold text-sm mb-3 tracking-wide uppercase">Start Your Journey</p>
-                    <h2 class="text-3xl sm:text-4xl font-bold text-navy mb-6 leading-tight">
+                    <p class="text-gold font-semibold text-sm mb-3 tracking-wide uppercase" data-i18n="form_label">Start Your Journey</p>
+                    <h2 class="text-3xl sm:text-4xl font-bold text-navy mb-6 leading-tight" data-i18n-html="form_title">
                         Take the First Step<br>Toward Your Future
                     </h2>
-                    <p class="text-lg text-dark-text/70 mb-8 leading-relaxed">
+                    <p class="text-lg text-dark-text/70 mb-8 leading-relaxed" data-i18n="form_desc">
                         Register for a free consultation and aptitude test.
                         No commitment, no pressure — just honest advice about your study abroad options.
                     </p>
@@ -1330,13 +1409,13 @@
                 <!-- Right: Form -->
                 <div class="reveal stagger-2">
                     <div class="bg-warm-white rounded-2xl p-8 sm:p-10 border border-gray-100 shadow-sm">
-                        <h3 class="text-xl font-bold text-navy mb-2">Register for Free Consultation</h3>
-                        <p class="text-sm text-mid-gray mb-8">Fill in below and we'll contact you within 24 hours.</p>
+                        <h3 class="text-xl font-bold text-navy mb-2" data-i18n="form_heading">Register for Free Consultation</h3>
+                        <p class="text-sm text-mid-gray mb-8" data-i18n="form_subheading">Fill in below and we'll contact you within 24 hours.</p>
 
                         <form id="register-form" onsubmit="handleFormSubmit(event)" class="space-y-5">
                             <!-- Name -->
                             <div>
-                                <label class="block text-sm font-medium text-navy mb-1.5">Full Name *</label>
+                                <label class="block text-sm font-medium text-navy mb-1.5" data-i18n="form_name">Full Name *</label>
                                 <input type="text" name="name" required
                                     class="w-full px-4 py-3 rounded-lg border border-gray-200 bg-white text-dark-text focus:outline-none focus:ring-2 focus:ring-gold/50 focus:border-gold transition"
                                     placeholder="e.g. Aung Myat Thu">
@@ -1344,7 +1423,7 @@
 
                             <!-- Phone -->
                             <div>
-                                <label class="block text-sm font-medium text-navy mb-1.5">Phone / Viber *</label>
+                                <label class="block text-sm font-medium text-navy mb-1.5" data-i18n="form_phone">Phone / Viber *</label>
                                 <input type="tel" name="phone" required
                                     class="w-full px-4 py-3 rounded-lg border border-gray-200 bg-white text-dark-text focus:outline-none focus:ring-2 focus:ring-gold/50 focus:border-gold transition"
                                     placeholder="+95 XXX XXX XXXX">
@@ -1352,7 +1431,7 @@
 
                             <!-- Email -->
                             <div>
-                                <label class="block text-sm font-medium text-navy mb-1.5">Email</label>
+                                <label class="block text-sm font-medium text-navy mb-1.5" data-i18n="form_email">Email</label>
                                 <input type="email" name="email"
                                     class="w-full px-4 py-3 rounded-lg border border-gray-200 bg-white text-dark-text focus:outline-none focus:ring-2 focus:ring-gold/50 focus:border-gold transition"
                                     placeholder="your@email.com">
@@ -1360,7 +1439,7 @@
 
                             <!-- Interested Countries -->
                             <div>
-                                <label class="block text-sm font-medium text-navy mb-2">Interested Countries *</label>
+                                <label class="block text-sm font-medium text-navy mb-2" data-i18n="form_countries">Interested Countries *</label>
                                 <div class="grid grid-cols-2 gap-2">
                                     <label class="flex items-center gap-2 bg-white rounded-lg px-3 py-2.5 border border-gray-200 cursor-pointer hover:border-gold/50 transition text-sm">
                                         <input type="checkbox" name="countries" value="korea" class="accent-gold w-4 h-4">
@@ -1399,7 +1478,7 @@
 
                             <!-- Study Timeline -->
                             <div>
-                                <label class="block text-sm font-medium text-navy mb-1.5">When do you plan to start?</label>
+                                <label class="block text-sm font-medium text-navy mb-1.5" data-i18n="form_timeline">When do you plan to start?</label>
                                 <select name="timeline"
                                     class="w-full px-4 py-3 rounded-lg border border-gray-200 bg-white text-dark-text focus:outline-none focus:ring-2 focus:ring-gold/50 focus:border-gold transition">
                                     <option value="">Select timeline</option>
@@ -1451,18 +1530,18 @@
     <!-- ============================================ -->
     <section class="py-20 sm:py-28 bg-soft-beige">
         <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center reveal">
-            <h2 class="text-3xl sm:text-4xl font-bold text-navy mb-6 leading-tight">
+            <h2 class="text-3xl sm:text-4xl font-bold text-navy mb-6 leading-tight" data-i18n-html="final_title">
                 Your Dream Is Waiting.<br>
                 <span class="text-gold">Let's Make It Happen.</span>
             </h2>
-            <p class="text-lg text-dark-text/70 mb-10 max-w-2xl mx-auto">
+            <p class="text-lg text-dark-text/70 mb-10 max-w-2xl mx-auto" data-i18n="final_desc">
                 Don't wait another semester. Join thousands of Myanmar students who are
                 already building their future abroad. The first step is free.
             </p>
-            <a href="#register" class="cta-btn inline-block bg-gold text-white px-10 py-5 rounded-lg font-bold text-xl">
+            <a href="#register" class="cta-btn inline-block bg-gold text-white px-10 py-5 rounded-lg font-bold text-xl" data-i18n="final_cta">
                 Start Your Journey — Free Consultation &rarr;
             </a>
-            <p class="text-sm text-mid-gray mt-4">No fees. No commitment. Just honest advice.</p>
+            <p class="text-sm text-mid-gray mt-4" data-i18n="final_note">No fees. No commitment. Just honest advice.</p>
         </div>
     </section>
 
@@ -1540,6 +1619,208 @@
     <!-- JAVASCRIPT -->
     <!-- ============================================ -->
     <script>
+        // ============================================
+        // TRANSLATIONS (EN / MY)
+        // ============================================
+        const T = {
+            en: {
+                // Nav
+                nav_countries: "Countries", nav_how: "How It Works", nav_fair: "Education Fair", nav_faq: "FAQ", nav_cta: "Free Consultation",
+                // Hero
+                hero_fair_badge: "Education Fair: March 28-29, 2026 \u2014 Yangon",
+                hero_h1_1: "Your Dream.", hero_h1_2: "Our Mission.", hero_h1_3: "Study Abroad", hero_h1_4: " Starts Here.",
+                hero_desc: 'Compare <strong class="text-navy">8 countries</strong> with <strong class="text-navy">1 trusted partner</strong>. From visa to campus life \u2014 we handle everything so you can focus on your future.',
+                hero_trust: 'Trusted by <strong class="text-navy">TUN YADANAR School</strong> (1,000+ students) in Mandalay. Now serving students across Myanmar.',
+                hero_cta: "Get Free Consultation \u2192", hero_explore: "Explore Countries",
+                hero_badge_1: "Free Aptitude Test", hero_badge_2: "End-to-End Support", hero_badge_3: "8 Countries",
+                // Pain
+                pain_title: "Studying Abroad Shouldn\u2019t Be This Hard",
+                pain_desc: "Every year, thousands of Myanmar students dream of studying abroad. But the journey is full of obstacles that stop most from ever starting.",
+                pain1_title: "Too Much Confusion", pain1_desc: "Which country? Which university? What visa? How much does it cost? The overwhelming number of choices leads to paralysis.",
+                pain2_title: "Hidden Costs & Scams", pain2_desc: "Unverified agents charge high fees with no guarantees. Families invest savings only to face visa rejections and broken promises.",
+                pain3_title: "Alone After Arrival", pain3_desc: "Even those who make it abroad often struggle alone \u2014 no local support, culture shock, and nowhere to turn.",
+                // Solution
+                sol_label: "There\u2019s a better way",
+                sol_title: 'What if you could compare<br class="hidden sm:block"><span class="text-gold">8 countries</span> with <span class="text-gold">1 partner</span>?',
+                sol_desc: "Imagine having a trusted education partner who knows every step \u2014 from choosing the right country to settling into your new campus. That\u2019s exactly what Mingalar Edu does.",
+                sol1_title: "Multi-Country Comparison", sol1_desc: "Korea, Thailand, China, UK, Ireland, Spain, Canada, USA \u2014 all in one place.",
+                sol2_title: "End-to-End Support", sol2_desc: "Visa, documents, flights, housing, settlement \u2014 we walk beside you every step.",
+                sol3_title: "Free Aptitude Test", sol3_desc: "Discover which country and program suits you best \u2014 completely free.",
+                // Countries
+                country_label: "8 Destinations, 1 Platform", country_title: "Find Your Perfect Study Destination",
+                country_desc: "Each country offers unique advantages. Compare tuition, living costs, scholarships, and opportunities \u2014 all curated for Myanmar students.",
+                country_cta_label: "Not sure which country is right for you?", country_cta_btn: "Take Free Aptitude Test \u2192",
+                // How it works
+                how_label: "Simple Process", how_title: "How It Works \u2014 3 Easy Steps",
+                how_desc: "We\u2019ve simplified the entire study abroad journey into three clear steps. You focus on your dreams \u2014 we handle the rest.",
+                step1_title: "Free Consultation & Aptitude Test", step1_desc: "Take our free aptitude test and meet with a consultant. We\u2019ll understand your goals, budget, and preferences to find the perfect match.",
+                step2_title: "Application & Visa Support", step2_desc: "We prepare all documents, submit applications, and guide you through the visa process. Our team handles the paperwork \u2014 you prepare for your journey.",
+                step3_title: "Arrival & Settlement", step3_desc: "From airport pickup to campus orientation, housing, and local support \u2014 you\u2019ll never feel alone. We stay connected throughout your study journey.",
+                // Fair
+                fair_badge: "Limited Spots \u2014 Pre-Register Now",
+                fair_title: 'Meet Us at the<br><span class="text-gold">Myanmar Education Fair 2026</span>',
+                // FAQ
+                faq_label: "Questions & Answers", faq_title: "Frequently Asked Questions",
+                faq_desc: "Everything you need to know about studying abroad with Mingalar Edu.",
+                faq1_q: "How much does it cost to use Mingalar Edu\u2019s services?",
+                faq1_a: "Our initial consultation and aptitude test are completely free. Service fees vary depending on the destination country and package you choose. We provide a clear, transparent fee breakdown before you commit to anything. There are no hidden charges.",
+                faq2_q: "What if my visa gets rejected?",
+                faq2_a: "We have a strong track record with visa applications. If a rejection occurs, we provide free re-application support, help identify the reason for rejection, and prepare a stronger case. We also explore alternative country options if needed.",
+                faq3_q: "Do I need to speak the local language before applying?",
+                faq3_a: "Not necessarily! Many programs across our 8 countries offer English-taught courses. For countries like Korea or China, we can help arrange language preparation courses. Our aptitude test also factors in your language skills when recommending destinations.",
+                faq4_q: "Can I work while studying abroad?",
+                faq4_a: "Most of our destination countries allow part-time work for international students (typically 20 hours/week during semester, full-time during breaks). Countries like Korea, Canada, and Ireland have particularly student-friendly work policies. We\u2019ll explain the rules for your chosen destination.",
+                faq5_q: "How is Mingalar Edu different from other agencies?",
+                faq5_a: "Most agencies focus on just 1-2 countries. We offer 8-country comparison so you make the best choice for your goals and budget. We\u2019re backed by TUN YADANAR School in Mandalay (1,000+ students), offer free aptitude testing, and provide full post-arrival support \u2014 not just a visa stamp and goodbye.",
+                faq6_q: "Are there scholarships available for Myanmar students?",
+                faq6_a: "Yes! Each country offers different scholarship programs. Korea has KGSP (Korean Government Scholarship), China offers CSC scholarships, UK has Chevening, and many universities offer their own merit-based aid. We maintain a comprehensive scholarship database and help with applications.",
+                faq7_q: "What should I bring to the Education Fair?",
+                faq7_a: "Bring your latest academic transcripts/report cards, a copy of your passport (if available), and any English proficiency test scores you may have. Most importantly, bring your questions and curiosity! Pre-registered visitors get priority consultation time.",
+                // Form
+                form_label: "Start Your Journey",
+                form_title: 'Take the First Step<br>Toward Your Future',
+                form_desc: "Register for a free consultation and aptitude test. No commitment, no pressure \u2014 just honest advice about your study abroad options.",
+                form_heading: "Register for Free Consultation",
+                form_subheading: "Fill in below and we\u2019ll contact you within 24 hours.",
+                form_name: "Full Name *", form_phone: "Phone / Viber *", form_email: "Email",
+                form_countries: "Interested Countries *", form_timeline: "When do you plan to start?",
+                // Final CTA
+                final_title: 'Your Dream Is Waiting.<br><span class="text-gold">Let\u2019s Make It Happen.</span>',
+                final_desc: "Don\u2019t wait another semester. Join thousands of Myanmar students who are already building their future abroad. The first step is free.",
+                final_cta: "Start Your Journey \u2014 Free Consultation \u2192",
+                final_note: "No fees. No commitment. Just honest advice.",
+                // Alerts
+                alert_country: "Please select at least one country you are interested in.",
+                alert_submitting: "Submitting..."
+            },
+            my: {
+                // Nav
+                nav_countries: "\u1014\u102d\u102f\u1004\u103a\u1004\u1036\u1019\u103b\u102c\u1038", nav_how: "\u1005\u1014\u1005\u103a\u1015\u102f\u1036", nav_fair: "\u1015\u100a\u102c\u101b\u1031\u1038\u1015\u103d\u1032", nav_faq: "\u1019\u1031\u1038\u1001\u103d\u1014\u103a\u1038\u1019\u103b\u102c\u1038", nav_cta: "\u1021\u1001\u103c\u1031\u1021\u1006\u1000\u103a\u1000\u1004\u103a\u101e\u103d\u1004\u103a\u1038\u1019\u103e\u102f",
+                // Hero
+                hero_fair_badge: "\u1015\u100a\u102c\u101b\u1031\u1038\u1015\u103d\u1032 \u2014 \u1019\u1010\u103a\u1001\u103b\u102e \u\u0968\u0968-\u0969\u0069\u002c \u0032\u0030\u0032\u0036 \u2014 \u101b\u1014\u103a\u1000\u102f\u1014\u103a",
+                hero_fair_badge: "\u1015\u100a\u102c\u101b\u1031\u1038\u1015\u103d\u1032: March 28-29, 2026 \u2014 \u101b\u1014\u103a\u1000\u102f\u1014\u103a",
+                hero_h1_1: "\u101e\u1004\u103a\u1037\u1021\u102d\u1015\u103a\u1019\u1000\u103a\u104b", hero_h1_2: "\u1000\u103b\u103d\u1014\u103a\u1015\u103a\u1010\u102d\u102f\u1037\u1010\u102c\u101d\u1014\u103a\u104b", hero_h1_3: "\u1014\u102d\u102f\u1004\u103a\u1004\u1036\u1001\u103c\u102c\u1038\u1015\u100a\u102c\u101b\u1031\u1038", hero_h1_4: " \u1005\u1010\u1004\u103a\u101c\u102d\u102f\u1000\u103a\u1015\u102b\u104b",
+                hero_desc: '\u1014\u102d\u102f\u1004\u103a\u1004\u1036 <strong class="text-navy">\u1048 \u1014\u102d\u102f\u1004\u103a\u1004\u1036</strong> \u1000\u102d\u102f <strong class="text-navy">\u101a\u102f\u1036\u1000\u103c\u100a\u103a\u101e\u1031\u102c\u1019\u102d\u1010\u103a\u1016\u1000\u103a \u1041 \u1001\u102f</strong> \u1014\u103e\u1004\u103a\u1037\u1014\u103e\u102d\u102f\u1004\u103a\u1038\u101a\u103e\u1025\u103a\u1015\u102b\u104b \u1017\u102e\u1007\u102c\u1019\u103e\u101e\u100a\u103a\u1019\u103e\u1010\u103a\u1015\u101b\u101d\u100a\u103a\u1011\u102d\u1010\u100a\u103a\u1005\u102d\u102f\u1000\u103a \u2014 \u1021\u102c\u1038\u101c\u102f\u1036\u1038\u1000\u102d\u102f \u1000\u103b\u103d\u1014\u103a\u1015\u103a\u1010\u102d\u102f\u1037\u1005\u102e\u1005\u1025\u103a\u1015\u1031\u1038\u1015\u102b\u1019\u100a\u103a\u104b',
+                hero_trust: '<strong class="text-navy">TUN YADANAR School</strong> (\u1000\u103b\u102c\u1004\u103a\u1038\u101e\u102c\u1038 \u1041,\u1040\u1040\u1040+) \u1019\u1014\u103a\u1010\u101c\u1031\u1038\u1019\u103e\u102c \u101a\u102f\u1036\u1000\u103c\u100a\u103a\u101b\u1031\u104b \u101a\u1001\u102f \u1019\u103c\u1014\u103a\u1019\u102c\u1010\u1005\u103a\u101c\u103d\u103e\u102c\u1038 \u101d\u1014\u103a\u1006\u1031\u102c\u1004\u103a\u1019\u103e\u102f\u1015\u1031\u1038\u1014\u1031\u1015\u102b\u104b',
+                hero_cta: "\u1021\u1001\u103c\u1031\u1021\u1006\u1000\u103a\u1000\u1004\u103a\u101e\u103d\u1004\u103a\u1038\u1019\u103e\u102f \u101b\u101a\u102f\u1015\u102b \u2192", hero_explore: "\u1014\u102d\u102f\u1004\u103a\u1004\u1036\u1019\u103b\u102c\u1038 \u1000\u103c\u100a\u103a\u1037\u101b\u103e\u102f",
+                hero_badge_1: "\u1021\u1001\u103c\u1031\u1005\u1019\u103a\u1038\u101e\u1015\u103a\u1005\u1019\u103a\u1038", hero_badge_2: "\u1021\u1005\u1019\u103e\u1021\u1006\u102f\u1036\u1038 \u1021\u1011\u1031\u102c\u1000\u103a\u1021\u1015\u1036\u1037", hero_badge_3: "\u1014\u102d\u102f\u1004\u103a\u1004\u1036 \u1048 \u1014\u102d\u102f\u1004\u103a\u1004\u1036",
+                // Pain
+                pain_title: "\u1014\u102d\u102f\u1004\u103a\u1004\u1036\u1001\u103c\u102c\u1038\u1015\u100a\u102c\u101b\u1031\u1038\u101e\u100a\u103a \u1012\u102e\u101c\u1031\u102c\u1000\u103a \u1001\u1000\u103a\u1001\u1032\u1019\u1014\u1031\u101e\u1004\u103a\u1037\u1015\u102b",
+                pain_desc: "\u1014\u103e\u1005\u103a\u1005\u1025\u103a \u1019\u103c\u1014\u103a\u1019\u102c\u1000\u103b\u102c\u1004\u103a\u1038\u101e\u102c\u1038\u1011\u1031\u102c\u1004\u103a\u1015\u1031\u102b\u1004\u103a\u1038\u1019\u103b\u102c\u1038\u1000 \u1014\u102d\u102f\u1004\u103a\u1004\u1036\u1001\u103c\u102c\u1038\u1015\u100a\u102c\u101b\u1031\u1038\u1021\u102d\u1015\u103a\u1019\u1000\u103a\u1019\u1000\u103a\u1014\u1031\u1013\u102c\u1038\u104b \u101e\u102d\u102f\u1037\u101e\u1031\u102c\u103a \u1021\u1001\u1000\u103a\u1021\u1001\u1032\u1019\u103b\u102c\u1038\u1000 \u1021\u1019\u103b\u102c\u1038\u1005\u102f\u1000\u102d\u102f \u101b\u1015\u103a\u1010\u1014\u103a\u1037\u101c\u102d\u102f\u1000\u103a\u1005\u1031\u1015\u102b\u101e\u100a\u103a\u104b",
+                pain1_title: "\u1005\u1000\u102c\u1038\u1021\u101c\u103d\u1014\u103a\u101b\u103e\u102f\u1015\u103a\u1011\u103d\u1031\u1038\u101c\u103d\u1014\u103a\u1038", pain1_desc: "\u1019\u100a\u103a\u1014\u102d\u102f\u1004\u103a\u1004\u1036\u101c\u1032\u104b \u1019\u100a\u103a\u1010\u1000\u1039\u1000\u101e\u102d\u102f\u101c\u103a\u101c\u1032\u104b \u1019\u100a\u103a\u1017\u102e\u1007\u102c\u101c\u1032\u104b \u1000\u102f\u1014\u103a\u1000\u103b\u1005\u103a\u1005\u101b\u102d\u1010\u103a\u1019\u103b\u102c\u1038\u101e\u100a\u103a\u104b \u101b\u103d\u1031\u1038\u1001\u103b\u101a\u103a\u1005\u101b\u102c\u1019\u103b\u102c\u1038\u101c\u103d\u1014\u103a\u1019\u103b\u102c\u1038\u101c\u102d\u102f\u1037 \u1006\u102f\u1036\u1038\u1016\u103c\u1010\u103a\u101c\u102d\u102f\u1037\u1019\u101b\u1015\u102b\u104b",
+                pain2_title: "\u101d\u103e\u1000\u103a\u1000\u103d\u101a\u103a\u1000\u102f\u1014\u103a\u1000\u103b\u1005\u103a\u1014\u103e\u1004\u103a\u1037 \u101c\u102d\u1019\u103a\u1038\u101c\u100a\u103a\u1019\u103e\u102f\u1019\u103b\u102c\u1038", pain2_desc: "\u1021\u1010\u100a\u103a\u1019\u1015\u103c\u102f\u101b\u1031\u1038 \u1021\u1031\u1002\u103b\u1004\u103a\u1019\u103b\u102c\u1038\u1000 \u1021\u102c\u1019\u1001\u1036\u1001\u103b\u1000\u103a\u1019\u101b\u103e\u102d\u1018\u1032 \u1000\u102f\u1014\u103a\u1000\u103b\u1005\u103a\u1019\u103c\u1004\u103a\u1037\u1019\u102c\u1038 \u101a\u1030\u1015\u102b\u101e\u100a\u103a\u104b \u1019\u102d\u101e\u102c\u1038\u1005\u102f\u1019\u103b\u102c\u1038\u1000 \u1005\u102f\u1006\u1031\u102c\u1004\u103a\u1038\u1004\u103d\u1031\u1000\u102d\u102f\u101b\u1004\u103a\u1038\u1014\u103e\u102e\u1038\u1015\u103c\u102e\u1038 \u1017\u102e\u1007\u102c\u1015\u101a\u103a\u1001\u103b\u1019\u103e\u102f\u1014\u103e\u1004\u103a\u1037 \u1000\u1010\u102d\u1005\u102f\u1019\u103b\u102c\u1038\u1000\u102d\u102f\u101e\u102c \u101b\u1004\u103a\u1006\u102d\u102f\u1004\u103a\u101b\u1015\u102b\u101e\u100a\u103a\u104b",
+                pain3_title: "\u101b\u1031\u102c\u1000\u103a\u1015\u103c\u102e\u1038\u1010\u1032\u1037\u1019\u103e\u102c \u1010\u1005\u103a\u1000\u102d\u102f\u101a\u103a\u1010\u100a\u103a\u1038", pain3_desc: "\u1014\u102d\u102f\u1004\u103a\u1004\u1036\u1001\u103c\u102c\u1038\u101b\u1031\u102c\u1000\u103a\u101e\u100a\u103a\u1037\u101e\u1030\u1019\u103b\u102c\u1038\u1015\u1004\u103a \u1010\u1005\u103a\u1000\u102d\u102f\u101a\u103a\u1010\u100a\u103a\u1038 \u101b\u102f\u1014\u103a\u1038\u1000\u1014\u103a\u1014\u1031\u101b\u1010\u1010\u103a\u1015\u102b\u101e\u100a\u103a \u2014 \u1014\u102e\u1038\u1005\u1025\u103a\u101b\u102c \u1021\u1011\u1031\u102c\u1000\u103a\u1021\u1015\u1036\u1037\u1019\u101b\u103e\u102d\u104a \u101a\u1025\u103a\u1000\u103b\u1031\u102c\u1019\u103e\u102f\u1021\u1001\u1000\u103a\u1021\u1001\u1032\u104a \u1019\u100a\u103a\u101e\u1030\u1037\u1000\u102d\u102f\u1019\u103e \u1021\u1000\u1030\u100a\u102e\u1010\u1031\u102c\u1004\u103a\u1038\u101c\u102d\u102f\u1037\u1019\u101b\u104b",
+                // Solution
+                sol_label: "\u1015\u102d\u102f\u1000\u1031\u102c\u1004\u103a\u1038\u101e\u1031\u102c\u101c\u1019\u103a\u1038\u1021\u100a\u103e\u102d\u101b\u103e\u102d\u1015\u102b\u101e\u100a\u103a",
+                sol_title: '\u1014\u102d\u102f\u1004\u103a\u1004\u1036 <span class="text-gold">\u1048 \u1014\u102d\u102f\u1004\u103a\u1004\u1036</span> \u1000\u102d\u102f <span class="text-gold">\u1019\u102d\u1010\u103a\u1016\u1000\u103a \u1041 \u1001\u102f</span> \u1014\u103e\u1004\u103a\u1037 \u1014\u103e\u102d\u102f\u1004\u103a\u1038\u101a\u103e\u1025\u103a\u1014\u102d\u102f\u1004\u103a\u101b\u1004\u103a\u1000\u1031\u102c\u104b',
+                sol_desc: "\u1014\u102d\u102f\u1004\u103a\u1004\u1036\u101b\u103d\u1031\u1038\u1001\u103b\u101a\u103a\u1001\u103c\u1004\u103a\u1038\u1019\u103e\u101e\u100a\u103a \u101e\u1004\u103a\u1037\u101c\u102c\u1015\u103a\u101e\u1005\u103a\u101b\u103d\u102c\u1019\u103e\u102c \u1021\u1001\u103c\u1031\u1001\u103b\u1001\u103b\u1004\u103a\u1038\u1010\u102d\u102f\u1004\u103a\u1038\u1000\u102d\u102f \u101e\u102d\u101e\u1031\u102c \u101a\u102f\u1036\u1000\u103c\u100a\u103a\u101b\u1031\u1038 \u1015\u102c\u1010\u1014\u102c\u1010\u1005\u103a\u1001\u102f\u101b\u103e\u102d\u101e\u100a\u103a\u1006\u102d\u102f\u101b\u1004\u103a \u1005\u1025\u103a\u1038\u1005\u102c\u1038\u1000\u103c\u100a\u103a\u1037\u1015\u102b\u104b \u1012\u102b\u1021\u1010\u102d\u1021\u1000\u103b Mingalar Edu \u1016\u103c\u1005\u103a\u1015\u102b\u101e\u100a\u103a\u104b",
+                sol1_title: "\u1014\u102d\u102f\u1004\u103a\u1004\u1036\u1019\u103b\u102c\u1038 \u1014\u103e\u102d\u102f\u1004\u103a\u1038\u101a\u103e\u1025\u103a\u1001\u103c\u1004\u103a\u1038", sol1_desc: "\u1000\u102d\u102f\u101b\u102e\u1038\u101a\u102c\u1038\u104a \u1011\u102d\u102f\u1004\u103a\u1038\u104a \u1010\u101b\u102f\u1010\u103a\u104a \u101a\u1030\u1000\u1031\u104a \u1021\u102d\u102f\u1004\u103a\u101a\u102c\u101c\u1014\u103a\u104a \u1005\u1015\u102d\u1014\u103a\u104a \u1000\u1014\u1031\u1012\u102b\u104a \u1021\u1019\u1031\u101b\u102d\u1000 \u2014 \u1010\u1005\u103a\u1014\u1031\u101b\u102c\u1010\u100a\u103a\u1038\u1019\u103e\u102c\u104b",
+                sol2_title: "\u1021\u1005\u1019\u103e\u1021\u1006\u102f\u1036\u1038 \u1015\u1036\u1037\u1015\u102d\u102f\u1038\u1019\u103e\u102f", sol2_desc: "\u1017\u102e\u1007\u102c\u104a \u1005\u102c\u101b\u103d\u1000\u103a\u104a \u101c\u1031\u101a\u102c\u1025\u103a\u104a \u1014\u1031\u1011\u102d\u102f\u1004\u103a\u104a \u1021\u1001\u103c\u1031\u1001\u103b\u1001\u103b\u1004\u103a\u1038 \u2014 \u1001\u103c\u1031\u1010\u102d\u102f\u1004\u103a\u1038\u1010\u103d\u1004\u103a \u101e\u1004\u103a\u1037\u1018\u1031\u1038\u1019\u103e\u102c \u101c\u103e\u1019\u103a\u1038\u101c\u103e\u1019\u103a\u1038\u101c\u102d\u102f\u1000\u103a\u1015\u102b\u1015\u102b\u1019\u100a\u103a\u104b",
+                sol3_title: "\u1021\u1001\u103c\u1031\u1005\u1019\u103a\u1038\u101e\u1015\u103a\u1005\u1019\u103a\u1038", sol3_desc: "\u101e\u1004\u103a\u1037\u1021\u1010\u103d\u1000\u103a \u1019\u100a\u103a\u1014\u102d\u102f\u1004\u103a\u1004\u1036\u1014\u103e\u1004\u103a\u1037 \u1015\u101b\u102d\u102f\u1002\u101b\u1019\u103a\u1000 \u1021\u1000\u1031\u102c\u1004\u103a\u1038\u1006\u102f\u1036\u1038\u101c\u1032\u1006\u102d\u102f\u101e\u100a\u103a\u1000\u102d\u102f \u101b\u103e\u102c\u1016\u103d\u1031\u1015\u102b \u2014 \u101c\u102f\u1036\u101d\u1001\u103c\u1031\u104b",
+                // Countries
+                country_label: "\u1014\u102d\u102f\u1004\u103a\u1004\u1036 \u1048 \u1001\u102f\u104a \u1015\u101c\u1000\u103a\u1016\u1031\u102c\u1004\u103a\u1038 \u1041 \u1001\u102f", country_title: "\u101e\u1004\u103a\u1037\u1021\u1010\u103d\u1000\u103a \u1021\u1000\u1031\u102c\u1004\u103a\u1038\u1006\u102f\u1036\u1038\u101e\u1031\u102c \u101c\u102c\u1038\u101b\u1004\u103a\u1038\u1014\u102d\u102f\u1004\u103a\u1004\u1036\u1000\u102d\u102f \u101b\u103e\u102c\u1015\u102b",
+                country_desc: "\u1014\u102d\u102f\u1004\u103a\u1004\u1036\u1010\u102d\u102f\u1004\u103a\u1038\u1019\u103e\u102c \u1000\u102d\u102f\u101a\u103a\u1005\u102e\u101a\u102c\u101e\u1031\u102c \u1021\u102c\u1038\u101e\u102c\u1001\u103b\u1000\u103a\u1019\u103b\u102c\u1038 \u101b\u103e\u102d\u1015\u102b\u101e\u100a\u103a\u104b \u1000\u103b\u1030\u101b\u103e\u1004\u103a\u104a \u1014\u1031\u1011\u102d\u102f\u1004\u103a\u1005\u101b\u102d\u1010\u103a\u104a \u1015\u100a\u102c\u101e\u1004\u103a\u1011\u1031\u102c\u1000\u103a\u1015\u1036\u1037\u1014\u103e\u1004\u103a\u1037 \u1021\u1001\u103d\u1004\u103a\u1037\u1021\u101c\u1019\u103a\u1038\u1019\u103b\u102c\u1038\u1000\u102d\u102f \u1014\u103e\u102d\u102f\u1004\u103a\u1038\u101a\u103e\u1025\u103a\u1000\u103c\u100a\u103a\u1037\u1015\u102b\u104b",
+                country_cta_label: "\u1019\u100a\u103a\u1014\u102d\u102f\u1004\u103a\u1004\u1036\u1000 \u101e\u1004\u103a\u1037\u1021\u1010\u103d\u1000\u103a\u1019\u103e\u1014\u103a\u1000\u1014\u103a\u1038\u101c\u1032\u1006\u102d\u102f\u101e\u100a\u103a\u1000\u102d\u102f \u1019\u101e\u1031\u1001\u103b\u102c\u1018\u1030\u1038\u1014\u1032\u1037\u104b", country_cta_btn: "\u1021\u1001\u103c\u1031\u1005\u1019\u103a\u1038\u101e\u1015\u103f\u1005\u1019\u103a\u1038 \u101c\u102f\u1015\u103a\u101c\u102d\u102f\u1000\u103a\u1015\u102b \u2192",
+                // How it works
+                how_label: "\u101b\u102d\u102f\u1038\u101b\u103e\u1004\u103a\u1038\u101e\u1031\u102c\u1021\u1006\u1004\u103a\u1037\u1019\u103b\u102c\u1038", how_title: "\u1021\u101c\u102f\u1015\u103a\u101c\u102f\u1015\u103a\u1015\u102f\u1036 \u2014 \u1021\u1006\u1004\u103a\u1037 \u1043 \u1001\u102f",
+                how_desc: "\u1014\u102d\u102f\u1004\u103a\u1004\u1036\u1001\u103c\u102c\u1038\u1015\u100a\u102c\u101b\u1031\u1038\u1001\u101b\u102e\u1038\u1010\u1005\u103a\u1001\u102f\u101c\u102f\u1036\u1038\u1000\u102d\u102f \u101b\u103e\u1004\u103a\u1038\u101c\u1004\u103a\u1038\u1015\u103c\u101a\u103a\u101c\u1004\u103a\u1038\u1010\u1032\u1037 \u1021\u1006\u1004\u103a\u1037 \u1043 \u1001\u102f\u1016\u103c\u1004\u103a\u1037 \u1001\u103b\u102f\u1036\u1037\u1014\u103e\u102d\u1019\u103a\u1038\u1015\u1031\u1038\u1011\u102c\u1038\u1015\u102b\u101e\u100a\u103f\u104b \u101e\u1004\u103a\u1037\u1021\u102d\u1015\u103a\u1019\u1000\u103a\u1000\u102d\u102f \u1021\u102c\u101b\u102f\u1036\u1005\u102d\u102f\u1000\u103a\u1015\u102b \u2014 \u1000\u103b\u1014\u103a\u101c\u102d\u102f\u1000\u102d\u102f \u1000\u103b\u103d\u1014\u103a\u1015\u103a\u1010\u102d\u102f\u1037\u1005\u102e\u1005\u1025\u103a\u1015\u102b\u1019\u100a\u103f\u104b",
+                step1_title: "\u1021\u1001\u103c\u1031\u1021\u1006\u1000\u103a\u1000\u1004\u103a\u101e\u103d\u1004\u103a\u1038\u1019\u103e\u102f\u1014\u103e\u1004\u103a\u1037 \u1005\u1019\u103a\u1038\u101e\u1015\u103a\u1005\u1019\u103a\u1038", step1_desc: "\u1000\u103b\u103d\u1014\u103a\u1015\u103a\u1010\u102d\u102f\u1037\u101b\u1031\u1038 \u1021\u1001\u103c\u1031\u1005\u1019\u103a\u1038\u101e\u1015\u103f\u1005\u1019\u103a\u1038\u1000\u102d\u102f \u101c\u102f\u1015\u103a\u1015\u102b\u104b \u101e\u1004\u103a\u1037\u101b\u100a\u103a\u1019\u103e\u1014\u103a\u1038\u1001\u103b\u1000\u103a\u104a \u1018\u1010\u103a\u1002\u103b\u1000\u103a\u104a \u1005\u102d\u1010\u103a\u101c\u102d\u102f\u1021\u1004\u103a\u1038\u1019\u103b\u102c\u1038\u1000\u102d\u102f \u1014\u102c\u1038\u101c\u100a\u103a\u1037\u1015\u103c\u102e\u1038 \u1021\u1000\u1031\u102c\u1004\u103a\u1038\u1006\u102f\u1036\u1038\u101e\u1031\u102c\u101c\u1019\u103a\u1038\u1014\u103e\u100a\u103a\u1000\u102d\u102f \u101b\u103e\u102c\u1015\u1031\u1038\u1019\u100a\u103f\u104b",
+                step2_title: "\u101c\u103b\u103e\u1031\u102c\u1000\u103a\u101c\u103d\u103e\u102c\u1014\u103e\u1004\u103a\u1037 \u1017\u102e\u1007\u102c\u1021\u1011\u1031\u102c\u1000\u103a\u1021\u1015\u1036\u1037", step2_desc: "\u1005\u102c\u101b\u103d\u1000\u103a\u1021\u102c\u1038\u101c\u102f\u1036\u1038 \u1015\u103c\u1004\u103a\u1006\u1004\u103a\u1015\u1031\u1038\u1019\u100a\u103f\u104b \u101c\u103b\u103e\u1031\u102c\u1000\u103f\u101c\u103d\u103e\u102c\u1019\u103b\u102c\u1038 \u1010\u1004\u103a\u1015\u1031\u1038\u1019\u100a\u103f\u104b \u1017\u102e\u1007\u102c\u101c\u102f\u1015\u103a\u1004\u1014\u103a\u1038\u1021\u1005\u102e\u1021\u1005\u1025\u103a\u1010\u1005\u103a\u1001\u102f\u101c\u102f\u1036\u1038\u1000\u102d\u102f \u101c\u1019\u103a\u1038\u1010\u1004\u103a\u1019\u103e\u102f\u1015\u1031\u1038\u1019\u100f\u103f\u104b \u1000\u103b\u103d\u1014\u103a\u1015\u103f\u1010\u102d\u102f\u1037\u1021\u1016\u103d\u1032\u1037\u1000 \u1005\u102c\u101b\u103d\u1000\u103a\u1000\u102d\u1005\u1039\u1005\u1000\u102d\u102f \u1006\u1031\u102c\u1004\u103a\u101b\u103d\u1000\u103a\u1019\u100f\u103f\u104b",
+                step3_title: "\u101b\u1031\u102c\u1000\u103f\u1014\u103e\u1004\u103a\u1037 \u1021\u1001\u103c\u1031\u1001\u103b\u1001\u103b\u1004\u103a\u1038", step3_desc: "\u101c\u1031\u1006\u102d\u1015\u103a\u1000\u103d\u1004\u103a\u1038\u1019\u103e \u1000\u1019\u103a\u1038\u1015\u1005\u103a\u101c\u1019\u103a\u1038\u100a\u103d\u103e\u1014\u103a\u104a \u1021\u102d\u1019\u103a\u101b\u102c\u104a \u1014\u102e\u1038\u1005\u1025\u103f\u101b\u102c \u1021\u1011\u1031\u102c\u1000\u103f\u1021\u1015\u1036\u1037\u1010\u102d\u102f\u1004\u103a\u1038\u1019\u103e\u102c \u2014 \u101e\u1004\u103a \u1018\u101a\u103a\u1010\u1031\u102c\u1037\u1019\u103e \u1010\u1005\u103f\u1000\u102d\u102f\u101a\u103f\u1010\u100a\u103f\u1038\u1016\u103c\u1005\u103f\u1014\u1031\u101b\u1019\u100f\u103f\u104b",
+                // Fair
+                fair_badge: "\u1014\u1031\u101b\u102c\u1021\u1000\u1014\u103a\u1037\u1021\u101e\u1010\u103a \u2014 \u1000\u103c\u102d\u102f\u1010\u1004\u103a\u1005\u102c\u101b\u1004\u103a\u1038\u1015\u102b",
+                fair_title: '<span class="text-gold">\u1019\u103c\u1014\u103a\u1019\u102c\u1015\u100a\u102c\u101b\u1031\u1038\u1015\u103d\u1032 \u1042\u1040\u1042\u1046</span> \u1019\u103e\u102c<br>\u1000\u103b\u103d\u1014\u103a\u1015\u103f\u1010\u102d\u102f\u1037\u1014\u103e\u1004\u103a\u1037 \u1010\u103d\u1031\u1037\u1006\u102f\u1036\u1015\u102b',
+                // FAQ
+                faq_label: "\u1019\u1031\u1038\u1001\u103d\u1014\u103a\u1038\u1014\u103e\u1004\u103a\u1037 \u1021\u1016\u103c\u1031\u1019\u103b\u102c\u1038", faq_title: "\u1019\u1031\u1038\u101c\u1031\u1037\u101b\u103e\u102d\u101e\u1031\u102c \u1019\u1031\u1038\u1001\u103d\u1014\u103a\u1038\u1019\u103b\u102c\u1038",
+                faq_desc: "Mingalar Edu \u1014\u103e\u1004\u103a\u1037\u1021\u1010\u1030 \u1014\u102d\u102f\u1004\u103a\u1004\u1036\u1001\u103c\u102c\u1038\u1015\u100a\u102c\u101b\u1031\u1038\u1021\u1000\u103c\u1031\u102c\u1004\u103a\u1038 \u101e\u102d\u101e\u1004\u103a\u1037\u101c\u102d\u102f\u101e\u1019\u103b\u102c\u1038\u1021\u102c\u1038\u101c\u102f\u1036\u1038\u104b",
+                faq1_q: "Mingalar Edu \u101b\u1032\u1037 \u101d\u1014\u103a\u1006\u1031\u102c\u1004\u103a\u1019\u103e\u102f\u1000 \u1018\u101a\u103a\u101c\u1031\u102c\u1000\u103f\u1000\u102f\u1014\u103a\u1000\u103b\u101c\u1032\u104b",
+                faq1_a: "\u1000\u103b\u103d\u1014\u103f\u1015\u103f\u1010\u102d\u102f\u1037\u101b\u1031\u1038 \u1015\u1011\u1019 \u1021\u1001\u103c\u1031\u1021\u1006\u1000\u103f\u1000\u1004\u103f\u101e\u103d\u1004\u103f\u1038\u1019\u103e\u102f\u1014\u103e\u1004\u103f\u1037 \u1005\u1019\u103f\u1038\u101e\u1015\u103f\u1005\u1019\u103f\u1038\u1000 \u101c\u102f\u1036\u1038\u101d \u1021\u1001\u103c\u1031\u1016\u103c\u1005\u103f\u1015\u102b\u101e\u100a\u103f\u104b \u101d\u1014\u103f\u1006\u1031\u102c\u1004\u103f\u1019\u103e\u102f\u1000\u102f\u1014\u103f\u1000\u103b\u1005\u103f\u1019\u103b\u102c\u1038\u1000 \u101e\u1004\u103f\u1037\u101b\u103d\u1031\u1038\u1001\u103b\u101a\u103f\u101e\u1031\u102c \u1014\u102d\u102f\u1004\u103f\u1004\u1036\u1014\u103e\u1004\u103f\u1037 \u1015\u1000\u103f\u1000\u1031\u1037\u1001\u103b\u1021\u101c\u102d\u102f\u1000\u103f \u1000\u103d\u1032\u1015\u103c\u102c\u1038\u1015\u102b\u101e\u100a\u103f\u104b \u101d\u103e\u1000\u103f\u1000\u103d\u101a\u103f\u1000\u102f\u1014\u103f\u1000\u103b\u1005\u103f \u101c\u102f\u1036\u1038\u101d\u1019\u101b\u103e\u102d\u1015\u102b\u104b",
+                faq2_q: "\u1017\u102e\u1007\u102c \u1015\u101a\u103f\u1001\u103b\u1001\u1036\u101b\u101b\u1004\u103f \u1018\u101a\u103f\u101c\u102f\u1015\u103f\u1019\u101c\u1032\u104b",
+                faq2_a: "\u1017\u102e\u1007\u102c\u101c\u103b\u103e\u1031\u102c\u1000\u103f\u101c\u103d\u103e\u102c\u1019\u103b\u102c\u1038\u1010\u103d\u1004\u103f \u1000\u103b\u103d\u1014\u103f\u1015\u103f\u1010\u102d\u102f\u1037\u1019\u103e\u102c \u1021\u1031\u102c\u1004\u103f\u1019\u103c\u1004\u103f\u101b\u1031\u1038\u1019\u103e\u1010\u103f\u1010\u1019\u103f\u1038 \u101b\u103e\u102d\u1015\u102b\u101e\u100f\u103f\u104b \u1015\u101a\u103f\u1001\u103b\u1001\u1036\u101b\u1015\u102b\u1000 \u1021\u1001\u103c\u1031\u1016\u103c\u1004\u103f\u1037 \u1015\u103c\u1014\u103f\u101c\u100a\u103f\u101c\u103b\u103e\u1031\u102c\u1000\u103f\u101c\u103d\u103e\u102c\u1021\u1011\u1031\u102c\u1000\u103f\u1021\u1015\u1036\u1037\u1015\u1031\u1038\u1019\u100f\u103f\u104b \u1015\u101a\u103f\u1001\u103b\u101b\u101e\u100f\u103f\u1037\u1021\u1000\u103c\u1031\u102c\u1004\u103f\u1038\u101b\u1004\u103f\u1038\u1000\u102d\u102f \u101b\u103e\u102c\u1016\u103d\u1031\u1015\u103c\u102e\u1038 \u1015\u102d\u102f\u1021\u102c\u1038\u1000\u1031\u102c\u1004\u103f\u1038\u101e\u1031\u102c case \u1000\u102d\u102f \u1015\u103c\u1004\u103f\u1006\u1004\u103f\u1015\u1031\u1038\u1019\u100f\u103f\u104b",
+                faq3_q: "\u101c\u103b\u103e\u1031\u102c\u1000\u103f\u101c\u103d\u103e\u102c\u1019\u1010\u1004\u103f\u1001\u1004\u103f \u1014\u102d\u102f\u1004\u103f\u1004\u1036\u1001\u103c\u102c\u1038\u1018\u102c\u101e\u102c\u1000\u102d\u102f \u1010\u1010\u103f\u1014\u102d\u102f\u1004\u103f\u1016\u102d\u102f\u1037\u101c\u102d\u102f\u101c\u102c\u1038\u104b",
+                faq3_a: "\u1019\u101c\u102d\u102f\u1021\u1015\u103f\u1015\u102b\u104b \u1014\u102d\u102f\u1004\u103f\u1004\u1036 \u1048 \u1001\u102f\u101b\u103e\u102d \u1021\u1004\u103f\u1039\u1002\u101c\u102d\u1015\u103f\u1016\u103c\u1004\u103f\u1037 \u101e\u1004\u103f\u1000\u103c\u102c\u1038\u101e\u1031\u102c \u1015\u101b\u102d\u102f\u1002\u101b\u1019\u103f\u1019\u103b\u102c\u1038 \u1021\u1019\u103b\u102c\u1038\u1021\u1015\u103c\u102c\u1038\u101b\u103e\u102d\u1015\u102b\u101e\u100f\u103f\u104b \u1000\u102d\u102f\u101b\u102e\u1038\u101a\u102c\u1038\u104a \u1010\u101b\u102f\u1010\u103f\u1000\u1032\u1037\u101e\u102d\u102f\u1037 \u1014\u102d\u102f\u1004\u103f\u1004\u1036\u1019\u103b\u102c\u1038\u1021\u1010\u103d\u1000\u103f \u1018\u102c\u101e\u102c\u1015\u103c\u1004\u103f\u1006\u1004\u103f\u101e\u1004\u103f\u1010\u1014\u103f\u1038\u1019\u103b\u102c\u1038 \u1005\u102e\u1005\u1025\u103f\u1015\u1031\u1038\u1014\u102d\u102f\u1004\u103f\u1015\u102b\u101e\u100f\u103f\u104b",
+                faq4_q: "\u1014\u102d\u102f\u1004\u103f\u1004\u1036\u1001\u103c\u102c\u1038\u1015\u100a\u102c\u101b\u1004\u103f\u1038 \u1021\u101c\u102f\u1015\u103f\u101c\u102f\u1015\u103f\u1014\u102d\u102f\u1004\u103f\u101c\u102c\u1038\u104b",
+                faq4_a: "\u1000\u103b\u103d\u1014\u103f\u1015\u103f\u1010\u102d\u102f\u1037\u101b\u1031\u1038 \u101c\u102c\u1038\u101b\u1004\u103f\u1038\u1014\u102d\u102f\u1004\u103f\u1004\u1036\u1021\u1019\u103b\u102c\u1038\u1005\u102f\u1010\u103d\u1004\u103f \u1014\u102d\u102f\u1004\u103f\u1004\u1036\u1001\u103c\u102c\u1038\u1000\u103b\u102c\u1004\u103f\u1038\u101e\u102c\u1038\u1019\u103b\u102c\u1038 part-time \u1021\u101c\u102f\u1015\u103f\u101c\u102f\u1015\u103f\u1001\u103d\u1004\u103f\u1037\u1015\u103c\u102f\u1011\u102c\u1038\u1015\u102b\u101e\u100f\u103f (\u101b\u1000\u103f\u101e\u1010\u1039\u1010\u1015\u1010\u103f \u1014\u102c\u101b\u102e \u1042\u1040 \u1014\u102c\u101b\u102e\u104a \u1021\u102c\u1038\u101c\u1015\u103f\u101b\u1000\u103f \u1021\u1015\u103c\u100a\u103f\u1037\u1001\u103b\u102d\u1014\u103f)\u104b \u1000\u102d\u102f\u101b\u102e\u1038\u101a\u102c\u1038\u104a \u1000\u1014\u1031\u1012\u102b\u104a \u1021\u102d\u102f\u1004\u103f\u101a\u102c\u101c\u1014\u103f\u1010\u102d\u102f\u1037\u1019\u103e\u102c \u1000\u103b\u102c\u1004\u103f\u1038\u101e\u102c\u1038\u1021\u1010\u103d\u1000\u103f \u1021\u101c\u102f\u1015\u103f\u1021\u1000\u102d\u102f\u1004\u103f \u1021\u1011\u1030\u1038\u101e\u1016\u103c\u1004\u103f\u1037\u1031\u1000\u102c\u1004\u103f\u1038\u1019\u103d\u1014\u103f\u1015\u102b\u101e\u100f\u103f\u104b",
+                faq5_q: "Mingalar Edu \u1000 \u1021\u1001\u103c\u102c\u1038 \u1021\u1031\u1002\u103b\u1004\u103f\u1019\u103b\u102c\u1038\u1014\u103e\u1004\u103f\u1037 \u1018\u101a\u103f\u101c\u102d\u102f\u1000\u103d\u1032\u1015\u103c\u102c\u1038\u101c\u1032\u104b",
+                faq5_a: "\u1021\u1031\u1002\u103b\u1004\u103f\u1021\u1019\u103b\u102c\u1038\u1005\u102f\u1000 \u1014\u102d\u102f\u1004\u103f\u1004\u1036 \u1041-\u1042 \u1001\u102f\u101e\u102c \u1021\u102c\u101b\u102f\u1036\u1005\u102d\u102f\u1000\u103f\u1014\u1031\u1013\u102c\u1038\u104b \u1000\u103b\u103d\u1014\u103f\u1015\u103f\u1010\u102d\u102f\u1037\u1000 \u1014\u102d\u102f\u1004\u103f\u1004\u1036 \u1048 \u1001\u102f \u1014\u103e\u102d\u102f\u1004\u103f\u1038\u101a\u103e\u1025\u103f\u1001\u103c\u1004\u103f\u1038 \u1015\u1031\u1038\u101e\u1016\u103c\u1004\u103f\u1037 \u101e\u1004\u103f\u1037\u101b\u100a\u103f\u1019\u103e\u1014\u103f\u1038\u1001\u103b\u1000\u103f\u1014\u103e\u1004\u103f\u1037 \u1018\u1010\u103f\u1002\u103b\u1000\u103f\u1021\u1010\u103d\u1000\u103f \u1021\u1000\u1031\u102c\u1004\u103f\u1038\u1006\u102f\u1036\u1038\u101e\u1031\u102c \u101b\u103d\u1031\u1038\u1001\u103b\u101a\u103f\u1001\u103b\u1000\u103f\u1000\u102d\u102f \u101c\u102f\u1015\u103f\u1014\u102d\u102f\u1004\u103f\u1015\u102b\u101e\u100f\u103f\u104b \u1019\u1014\u103f\u1010\u101c\u1031\u1038 TUN YADANAR School (\u1000\u103b\u102c\u1004\u103f\u1038\u101e\u102c\u1038 \u1041,\u1040\u1040\u1040+) \u1000 \u1021\u1011\u1031\u102c\u1000\u103f\u1021\u1015\u1036\u1037\u1015\u1031\u1038\u1015\u102b\u101e\u100f\u103f\u104b",
+                faq6_q: "\u1019\u103c\u1014\u103f\u1019\u102c\u1000\u103b\u102c\u1004\u103f\u1038\u101e\u102c\u1038\u1019\u103b\u102c\u1038\u1021\u1010\u103d\u1000\u103f \u1015\u100a\u102c\u101e\u1004\u103f\u1011\u1031\u102c\u1000\u103f\u1015\u1036\u1037 \u101b\u103e\u102d\u101c\u102c\u1038\u104b",
+                faq6_a: "\u101b\u103e\u102d\u1015\u102b\u101e\u100f\u103f\u104b \u1014\u102d\u102f\u1004\u103f\u1004\u1036\u1010\u102d\u102f\u1004\u103f\u1038\u1019\u103e\u102c \u1019\u1010\u1030\u100a\u102e\u101e\u1031\u102c \u1015\u100a\u102c\u101e\u1004\u103f\u1011\u1031\u102c\u1000\u103f\u1015\u1036\u1037\u1019\u103b\u102c\u1038 \u101b\u103e\u102d\u1015\u102b\u101e\u100f\u103f\u104b \u1000\u102d\u102f\u101b\u102e\u1038\u101a\u102c\u1038\u1019\u103e\u102c KGSP\u104a \u1010\u101b\u102f\u1010\u103f\u1019\u103e\u102c CSC\u104a \u101a\u1030\u1000\u1031\u1019\u103e\u102c Chevening \u101b\u103e\u102d\u1015\u103c\u102e\u1038 \u1010\u1000\u1039\u1000\u101e\u102d\u102f\u101c\u103f\u1021\u1019\u103b\u102c\u1038\u1005\u102f\u1000\u101c\u100a\u103f\u1038 \u1000\u102d\u102f\u101a\u103f\u1015\u102d\u102f\u1004\u103f \u1015\u100a\u102c\u101e\u1004\u103f\u1011\u1031\u102c\u1000\u103f\u1015\u1036\u1037\u1019\u103b\u102c\u1038 \u1015\u1031\u1038\u1011\u102c\u1038\u1015\u102b\u101e\u100f\u103f\u104b",
+                faq7_q: "\u1015\u100a\u102c\u101b\u1031\u1038\u1015\u103d\u1032\u1000\u102d\u102f \u1018\u102c\u101a\u1030\u101e\u103d\u102c\u1038\u101b\u1019\u101c\u1032\u104b",
+                faq7_a: "\u101e\u1004\u103f\u1037\u101b\u1032\u1037 \u1014\u1031\u102c\u1000\u103f\u1006\u102f\u1036\u1038\u101e\u100f\u103f\u1037 \u1005\u102c\u1019\u1031\u1038\u101b\u103d\u1000\u103f\u1019\u103b\u102c\u1038\u104a \u1014\u102d\u102f\u1004\u103f\u1004\u1036\u1000\u1030\u1038\u101c\u1000\u103f\u1019\u103e\u1010\u103f (\u101b\u103e\u102d\u101c\u103b\u103e\u1004\u103f)\u104a \u1021\u1004\u103f\u1039\u1002\u101c\u102d\u1015\u103f\u1005\u1019\u103f\u1038\u101e\u1015\u103f\u101b\u1019\u103e\u1010\u103f\u1019\u103b\u102c\u1038 \u101a\u1030\u101c\u102c\u1015\u102b\u104b \u1021\u101b\u1031\u1038\u1021\u1000\u103c\u102e\u1038\u1006\u102f\u1036\u1038\u1000\u1010\u1031\u102c\u1037 \u101e\u1004\u103f\u1037\u101b\u1032\u1037\u1019\u1031\u1038\u1001\u103d\u1014\u103f\u1038\u1019\u103b\u102c\u1038\u1014\u103e\u1004\u103f\u1037 \u101e\u102d\u1001\u103b\u1004\u103f\u1005\u102d\u1010\u103f\u101c\u102d\u102f\u1001\u103b\u1000\u103f\u1000\u102d\u102f \u101a\u1030\u101c\u102c\u1015\u102b\u104b \u1000\u103c\u102d\u102f\u1010\u1004\u103f\u1005\u102c\u101b\u1004\u103f\u1038\u1011\u102c\u1038\u101e\u1030\u1019\u103b\u102c\u1038 \u1025\u1005\u102e\u1021\u1006\u1004\u103f\u1037 \u1021\u1001\u103c\u1031\u1021\u1006\u1000\u103f\u1000\u1004\u103f\u101e\u103d\u1004\u103f\u1038\u1019\u103e\u102f\u101b\u1019\u100f\u103f\u104b",
+                // Form
+                form_label: "\u101e\u1004\u103f\u1037\u1001\u101b\u102e\u1038\u1000\u102d\u102f \u1005\u1010\u1004\u103f\u101c\u102d\u102f\u1000\u103f\u1015\u102b",
+                form_title: '\u101e\u1004\u103f\u1037\u1021\u1014\u102c\u1002\u1010\u103f\u1006\u102e\u101e\u102d\u102f\u1037<br>\u1015\u1011\u1019\u1021\u1006\u1004\u103f\u1037\u1000\u102d\u102f \u1005\u1010\u1004\u103f\u101c\u102d\u102f\u1000\u103f\u1015\u102b',
+                form_desc: "\u1021\u1001\u103c\u1031\u1021\u1006\u1000\u103f\u1000\u1004\u103f\u101e\u103d\u1004\u103f\u1038\u1019\u103e\u102f\u1014\u103e\u1004\u103f\u1037 \u1005\u1019\u103f\u1038\u101e\u1015\u103f\u1005\u1019\u103f\u1038\u1021\u1010\u103d\u1000\u103f \u1005\u102c\u101b\u1004\u103f\u1038\u1015\u102b\u104b \u1000\u1010\u102d\u1000\u103f\u1000\u102d\u102f\u1004\u103f\u1019\u103e\u102f\u1019\u101b\u103e\u102d\u104a \u1016\u102d\u1021\u102c\u1038\u101c\u100a\u103f\u1038\u1019\u103e\u102f\u1019\u101b\u103e\u102d \u2014 \u101b\u102d\u102f\u1038\u101e\u102c\u1038\u1005\u103d\u102c \u1021\u1000\u103c\u1036\u1015\u103c\u102f\u1001\u103b\u1000\u103f\u1019\u103b\u102c\u1038\u101e\u102c \u101b\u101a\u102f\u1015\u102b\u104b",
+                form_heading: "\u1021\u1001\u103c\u1031\u1021\u1006\u1000\u103f\u1000\u1004\u103f\u101e\u103d\u1004\u103f\u1038\u1019\u103e\u102f \u1005\u102c\u101b\u1004\u103f\u1038\u1015\u102b",
+                form_subheading: "\u1021\u1031\u102c\u1000\u103f\u1015\u102b\u1016\u103c\u100a\u103f\u1037\u1015\u102b\u104b \u1014\u102c\u101b\u102e \u1042\u1044 \u1014\u102c\u101b\u102e\u1021\u1010\u103d\u1004\u103f\u1038 \u1006\u1000\u103f\u101e\u103d\u101a\u103f\u1015\u102b\u1019\u100f\u103f\u104b",
+                form_name: "\u1021\u1019\u100a\u103f\u1021\u1014\u102c\u1019\u100f\u103f \u1021\u1015\u103c\u100a\u103f\u1037\u1021\u1005\u102f\u1036 *", form_phone: "\u1016\u102f\u1014\u103f\u1038 / Viber *", form_email: "\u1021\u102e\u1038\u1019\u1031\u1038\u101c\u103f",
+                form_countries: "\u1005\u102d\u1010\u103f\u101d\u1004\u103f\u1005\u102c\u1038\u101e\u1031\u102c \u1014\u102d\u102f\u1004\u103f\u1004\u1036\u1019\u103b\u102c\u1038 *", form_timeline: "\u1018\u101a\u103f\u1010\u102f\u1014\u103f\u1038\u1000 \u1005\u1010\u1004\u103f\u1019\u101c\u1032\u104b",
+                // Final CTA
+                final_title: '\u101e\u1004\u103f\u1037\u1021\u102d\u1015\u103f\u1019\u1000\u103f\u1000 \u1005\u1031\u102c\u1004\u103f\u1037\u1014\u1031\u1015\u102b\u101e\u100f\u103f\u104b<br><span class="text-gold">\u1021\u1010\u1030\u1010\u1000\u103d \u1021\u1000\u1031\u102c\u1004\u103f\u1021\u1011\u100a\u103f\u101c\u102f\u1015\u103f\u1000\u103c\u101b\u1021\u1031\u102c\u1004\u103f\u104b</span>',
+                final_desc: "\u1014\u1031\u102c\u1000\u103f\u1011\u1015\u103f\u1015\u100a\u102c\u101e\u1004\u103f\u1000\u102c\u101c \u1019\u1005\u1031\u102c\u1004\u103f\u1037\u1015\u102b\u1014\u103e\u1004\u103f\u1037\u104b \u1014\u102d\u102f\u1004\u103f\u1004\u1036\u1001\u103c\u102c\u1038\u1019\u103e\u102c \u101e\u1004\u103f\u1010\u102d\u102f\u1037\u1021\u1014\u102c\u1002\u1010\u103f\u1000\u102d\u102f \u1010\u100a\u103f\u1006\u1031\u102c\u1000\u103f\u1014\u1031\u101e\u1031\u102c \u1019\u103c\u1014\u103f\u1019\u102c\u1000\u103b\u102c\u1004\u103f\u1038\u101e\u102c\u1038\u1011\u1031\u102c\u1004\u103f\u1015\u1031\u102b\u1004\u103f\u1038\u1019\u103b\u102c\u1038\u1014\u103e\u1004\u103f\u1037\u1021\u1010\u1030 \u1015\u102b\u101d\u1004\u103f\u1015\u102b\u104b \u1015\u1011\u1019\u1021\u1006\u1004\u103f\u1037\u1000 \u1021\u1001\u103c\u1031\u104b",
+                final_cta: "\u101e\u1004\u103f\u1037\u1001\u101b\u102e\u1038\u1005\u1010\u1004\u103f\u1015\u102b \u2014 \u1021\u1001\u103c\u1031\u1021\u1006\u1000\u103f\u1000\u1004\u103f\u101e\u103d\u1004\u103f\u1038\u1019\u103e\u102f \u2192",
+                final_note: "\u1000\u102f\u1014\u103f\u1000\u103b\u1005\u103f\u1019\u101b\u103e\u102d\u104b \u1000\u1010\u102d\u1000\u103f\u1000\u102d\u102f\u1004\u103f\u1019\u101b\u103e\u102d\u104b \u101b\u102d\u102f\u1038\u101e\u102c\u1038\u1005\u103d\u102c \u1021\u1000\u103c\u1036\u1015\u103c\u102f\u1001\u103b\u1000\u103f\u1019\u103b\u102c\u1038\u101e\u102c\u104b",
+                // Alerts
+                alert_country: "\u1005\u102d\u1010\u103f\u101d\u1004\u103f\u1005\u102c\u1038\u101e\u1031\u102c \u1014\u102d\u102f\u1004\u103f\u1004\u1036\u1021\u1014\u100a\u103f\u1038\u1006\u102f\u1036\u1038 \u1041 \u1001\u102f \u101b\u103d\u1031\u1038\u1001\u103b\u101a\u103f\u1015\u102b\u104b",
+                alert_submitting: "\u1015\u102d\u102f\u1037\u101c\u103d\u103e\u1010\u103f\u1014\u1031\u101e\u100f\u103f..."
+            }
+        };
+
+        let currentLang = localStorage.getItem('mingalar_lang') || 'en';
+
+        function setLanguage(lang) {
+            currentLang = lang;
+            localStorage.setItem('mingalar_lang', lang);
+            document.documentElement.lang = lang === 'my' ? 'my' : 'en';
+
+            // Update body class for Myanmar font
+            if (lang === 'my') {
+                document.body.classList.add('lang-my');
+            } else {
+                document.body.classList.remove('lang-my');
+            }
+
+            // Update text content
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (T[lang] && T[lang][key]) {
+                    el.textContent = T[lang][key];
+                }
+            });
+
+            // Update innerHTML (for elements with HTML tags like <strong>, <br>, <span>)
+            document.querySelectorAll('[data-i18n-html]').forEach(el => {
+                const key = el.getAttribute('data-i18n-html');
+                if (T[lang] && T[lang][key]) {
+                    el.innerHTML = T[lang][key];
+                }
+            });
+
+            // Update language switcher buttons (desktop + mobile)
+            document.querySelectorAll('.lang-btn').forEach(btn => {
+                if (btn.getAttribute('data-lang') === lang) {
+                    btn.classList.add('active');
+                } else {
+                    btn.classList.remove('active');
+                }
+            });
+
+            // Show/hide Myanmar language banner in hero
+            const banner = document.getElementById('lang-banner');
+            if (banner) {
+                if (lang === 'my') {
+                    banner.classList.add('hidden-banner');
+                } else {
+                    banner.classList.remove('hidden-banner');
+                }
+            }
+        }
+
+        // Apply saved language on load
+        if (currentLang !== 'en') {
+            setLanguage(currentLang);
+        }
+
         // ---- Navbar scroll effect ----
         const navbar = document.getElementById('navbar');
         window.addEventListener('scroll', () => {
@@ -1626,12 +1907,12 @@
             // Simple validation for countries
             const checked = form.querySelectorAll('input[name="countries"]:checked');
             if (checked.length === 0) {
-                alert('Please select at least one country you are interested in.');
+                alert(T[currentLang].alert_country);
                 return;
             }
 
             // Simulate submission
-            btn.textContent = 'Submitting...';
+            btn.textContent = T[currentLang].alert_submitting;
             btn.disabled = true;
 
             setTimeout(() => {
