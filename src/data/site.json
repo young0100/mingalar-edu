@@ -1,0 +1,14 @@
+{
+  "brand": "Mingalar Edu",
+  "phone": "+959966042973",
+  "phone_display": "09 966 042 973",
+  "email": "info@mingalaredu.com",
+  "channels": [
+    { "name": "Telegram", "url": "https://t.me/+959966042973" },
+    { "name": "Viber", "url": "viber://chat?number=%2B959966042973" },
+    { "name": "Messenger", "url": "https://m.me/693815550488674" }
+  ],
+  "reviewer": "Steven",
+  "updated": "2026-10-09",
+  "fx": { "usd_mmk": "TODO", "asof": "TODO", "source": "TODO" }
+}

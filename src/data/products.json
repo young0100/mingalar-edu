@@ -1,0 +1,50 @@
+[
+  {
+    "code": "CN-BACH-2027",
+    "country": "china",
+    "slug": "china-top-universities-bachelor",
+    "name": "China Top Universities Bachelor",
+    "tags": ["Bachelor", "China", "University shortlist"],
+    "status": "Contact us",
+    "duration": { "value": "TODO", "source": "TODO", "asof": "TODO" },
+    "intake": { "value": "TODO", "source": "TODO", "asof": "2026-10-09" },
+    "schools": ["zhejiang", "xian-jiaotong", "fudan", "xian-jiaotong-liverpool", "nottingham-ningbo", "jiangsu", "bist"],
+    "includes": ["Shortlist", "Documents", "Application", "Admissions follow-up", "Visa documents", "Pre-departure"],
+    "excludes": ["Tuition", "School application fee", "Translation/notary", "Flight", "Insurance", "Housing"],
+    "overview": "Explore a Chinese university bachelor shortlist with support for documents, applications, admissions follow-up and visa documents. Contact us to confirm which school and programme fit your study plans.",
+    "timeline": [{ "name": "Shortlist", "description": "Discuss your goals and select suitable school and programme options." }, { "name": "Application", "description": "Prepare documents, submit the application and follow up with admissions." }, { "name": "Visa and departure", "description": "Organise visa documents and discuss pre-departure preparations." }],
+    "terms": ["Confirm programme availability, tuition, requirements and intake before applying.", "School admissions and visa decisions are made by the relevant institutions and authorities.", "Ask for a written service scope and fee breakdown before payment.", "Only official accounts and receipts are valid."]
+  },
+  {
+    "code": "EU-BACH-2027",
+    "country": "europe",
+    "slug": "eu-business-school-bachelor",
+    "name": "EU Business School Bachelor",
+    "tags": ["Bachelor", "Europe", "Campus options"],
+    "status": "Contact us",
+    "duration": { "value": "TODO", "source": "TODO", "asof": "TODO" },
+    "intake": { "value": "2027-02", "source": "TODO", "asof": "2026-10-09" },
+    "schools": ["eu-business-school"],
+    "includes": ["Shortlist", "Documents", "Application", "Admissions follow-up", "Visa documents", "Pre-departure"],
+    "excludes": ["Tuition", "School application fee", "Translation/notary", "Flight", "Insurance", "Housing"],
+    "overview": "Explore EU Business School bachelor options in Barcelona, Geneva, Munich and Digital. Discuss your preferred location and programme with Mingalar Edu before preparing your application.",
+    "timeline": [{ "name": "Programme and location", "description": "Discuss your study goals and preferred EU Business School option." }, { "name": "Application", "description": "Prepare documents, submit the application and follow up with admissions." }, { "name": "Visa and departure", "description": "Confirm the process for your study location and organise supporting documents." }],
+    "terms": ["Confirm programme and campus availability, tuition and entry requirements before applying.", "Visa requirements depend on the chosen study location and your circumstances.", "School admissions and visa decisions are made by the relevant institutions and authorities.", "Ask for a written service scope and fee breakdown before payment.", "Only official accounts and receipts are valid."]
+  },
+  {
+    "code": "KR-JTU-2027",
+    "country": "korea",
+    "slug": "jeju-tourism-university",
+    "name": "Jeju Tourism University",
+    "tags": ["Korea", "Jeju Tourism University", "Study planning"],
+    "status": "Contact us",
+    "duration": { "value": "TODO", "source": "TODO", "asof": "TODO" },
+    "intake": { "value": "2027-03", "source": "TODO", "asof": "2026-10-09" },
+    "schools": ["jeju-tourism"],
+    "includes": ["Shortlist", "Documents", "Application", "Admissions follow-up", "Visa documents", "Pre-departure"],
+    "excludes": ["Tuition", "School application fee", "Translation/notary", "Flight", "Insurance", "Housing"],
+    "overview": "Explore Jeju Tourism University with Mingalar Edu. Discuss course options, language preparation and the application documents needed for your study plans.",
+    "timeline": [{ "name": "Course planning", "description": "Confirm your preferred course and discuss entry and language requirements." }, { "name": "Application", "description": "Prepare documents, submit the application and follow up with admissions." }, { "name": "Visa and departure", "description": "Organise visa documents and discuss pre-departure preparations." }],
+    "terms": ["Confirm course availability, tuition, language requirements and intake before applying.", "School admissions and visa decisions are made by the relevant institutions and authorities.", "Work permissions depend on your visa and course; confirm official requirements before making plans.", "Ask for a written service scope and fee breakdown before payment.", "Only official accounts and receipts are valid."]
+  }
+]

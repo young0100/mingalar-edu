@@ -1,0 +1,11 @@
+---
+import schools from '../data/schools.json';
+import { display } from '../lib/site';
+interface Props { ids?: string[]; costs?: boolean }
+const { ids, costs = false } = Astro.props;
+const items = ids ? schools.filter((school) => ids.includes(school.id)) : schools;
+---
+{costs ? <div class="table-wrap" tabindex="0" role="region" aria-label="School costs and requirements">
+  <table><thead><tr><th scope="col">School</th><th scope="col">Tuition</th><th scope="col">Requirements</th><th scope="col">Source / updated</th></tr></thead>
+  <tbody>{items.map((school) => <tr><th scope="row">{school.name}</th><td>{display(school.tuition.value)}</td><td>{display(school.requirements.value)}</td><td>Tuition: {school.tuition.source === 'TODO' ? 'Contact us' : <a href={school.tuition.source}>Source</a>} / {display(school.tuition.asof)}<br />Requirements: {school.requirements.source === 'TODO' ? 'Contact us' : <a href={school.requirements.source}>Source</a>} / {display(school.requirements.asof)}</td></tr>)}</tbody></table>
+</div> : <ul class="grid-cards list-none p-0">{items.map((school) => <li class="card"><h3>{school.name}</h3>{school.locations.length > 0 && <p>{school.locations.join(' · ')}</p>}<p class="muted">{school.role}</p></li>)}</ul>}

@@ -1,0 +1,57 @@
+---
+import Layout from '../../../layouts/Layout.astro';
+import ProductCards from '../../../components/ProductCards.astro';
+import Contact from '../../../components/Contact.astro';
+import Faq from '../../../components/Faq.astro';
+import countries from '../../../data/countries.json';
+import { languages, products, metadata, productPath } from '../../../lib/site';
+export function getStaticPaths() { return languages.map((lang) => ({ params: { lang } })); }
+const { lang } = Astro.params;
+const path = `/${lang}/tools/find-my-program/`;
+const meta = metadata('Find my program: study abroad options', lang!);
+const faq = [{ question: 'Is this an admission decision?', answer: 'This tool suggests programmes to discuss with Mingalar Edu. Our team needs to confirm your eligibility, teaching language and current availability.' }, { question: 'Are my answers saved?', answer: 'Your answers are processed on your device. The tool does not store personal information or send your answers to a server.' }];
+const clientProducts = products.map((product) => ({ code: product.code, name: product.name, country: product.country, intake: { value: product.intake.value === 'TODO' ? 'unknown' : product.intake.value }, path: productPath(lang!, product) }));
+---
+<Layout {...meta} lang={lang} path={path} crumbs={[{ name: 'Home', path: `/${lang}/` }, { name: 'Find my program', path }]} faq={faq}>
+  <section class="hero"><div class="shell"><p class="eyebrow">A starting point for your conversation</p><h1>Find my program</h1><p>Tell us your study preferences to see programmes to discuss with Mingalar Edu. No names or contact details needed. Answers stay on your device.</p></div></section>
+  <div class="shell section">
+    <form id="program-finder" class="card" data-products={JSON.stringify(clientProducts)}>
+      <div class="finder">
+        <label>Where would you like to study?<select name="destination"><option value="any">I am open to destinations</option>{countries.map((country) => <option value={country.id}>{country.name}</option>)}</select></label>
+        <label>Your current qualification<select name="qualification"><option value="secondary">Completed or completing secondary school</option><option value="other">Another qualification — I need advice</option></select></label>
+        <label>Preferred teaching language<select name="language"><option value="english">English — confirm availability</option><option value="local">Local language — discuss preparation</option><option value="any">I need advice</option></select></label>
+        <label>Preferred intake<select name="intake"><option value="any">Flexible / not sure</option>{[...new Set(products.map((product) => product.intake.value))].filter((value) => value !== 'TODO').map((value) => <option value={value}>{value}</option>)}</select></label>
+        <label>Where would you like support?<select name="support"><option value="full">From shortlisting to pre-departure</option><option value="application">Application and documents</option><option value="visa">Visa preparation</option></select></label>
+      </div><button class="button mt-6" type="submit">Show programmes to discuss</button>
+    </form>
+    <noscript><p class="notice">Enable JavaScript to match your preferences, or explore the programmes below and contact us for advice.</p></noscript>
+    <section id="results" class="section" aria-live="polite" tabindex="-1"><h2>Programmes to explore</h2><p>These options are available to discuss. The matcher can narrow this list after you choose your preferences.</p><ProductCards lang={lang!} items={products} /></section>
+    <Faq items={faq} /><Contact />
+  </div>
+  <script>
+    import { recommendProducts } from '../../../lib/finder.mjs';
+    const form = document.querySelector<HTMLFormElement>('#program-finder');
+    const results = document.querySelector<HTMLElement>('#results');
+    if (form && results) {
+      const products = JSON.parse(form.dataset.products ?? '[]');
+      form.addEventListener('submit', (event) => {
+        event.preventDefault();
+        const answers = Object.fromEntries(new FormData(form).entries());
+        const matches = recommendProducts(products, answers);
+        const heading = document.createElement('h2'); heading.textContent = 'Your programmes to discuss';
+        const note = document.createElement('p');
+        note.textContent = matches.length ? 'These are inquiry options. Confirm your qualification, teaching language, requested intake and support preferences with our team. Mention the programme code when you contact us.' : 'We need a conversation to suggest a suitable programme. Contact Mingalar Edu with your study goals.';
+        results.replaceChildren(heading, note);
+        const grid = document.createElement('div'); grid.className = 'grid-cards';
+        matches.forEach((product: { code: string; name: string; path: string }) => {
+          const card = document.createElement('article'); card.className = 'card';
+          const title = document.createElement('h3'); title.textContent = product.name;
+          const code = document.createElement('p'); code.textContent = `Mention code: ${product.code}`;
+          const link = document.createElement('a'); link.href = product.path; link.className = 'button'; link.textContent = 'Explore programme';
+          card.append(title, code, link); grid.append(card);
+        });
+        results.append(grid); results.focus();
+      });
+    }
+  </script>
+</Layout>

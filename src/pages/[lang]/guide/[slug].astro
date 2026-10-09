@@ -1,0 +1,24 @@
+---
+import { getCollection, render } from 'astro:content';
+import Layout from '../../../layouts/Layout.astro';
+import Fees from '../../../components/Fees.astro';
+import Faq from '../../../components/Faq.astro';
+import Contact from '../../../components/Contact.astro';
+import { languages, products, productPath } from '../../../lib/site';
+export async function getStaticPaths() {
+  const guides = await getCollection('guide');
+  return languages.flatMap((lang) => guides.map((guide) => ({ params: { lang, slug: guide.id }, props: { guide } })));
+}
+const { lang, slug } = Astro.params;
+const { guide } = Astro.props;
+const { Content } = await render(guide);
+const data = guide.data;
+const path = `/${lang}/guide/${slug}/`;
+const meta = { title: `${data.title} · ${lang === 'my' ? 'MY' : 'EN'}`, description: `${lang === 'my' ? 'MY' : 'EN'}: ${data.description.slice(0, 156)}` };
+const crumbs = [{ name: 'Home', path: `/${lang}/` }, { name: data.question, path }];
+---
+<Layout {...meta} lang={lang} path={path} crumbs={crumbs} faq={data.faq} article={data}>
+  <div class="shell"><ol class="breadcrumbs" aria-label="Breadcrumb">{crumbs.map((crumb) => <li><a href={crumb.path}>{crumb.name}</a></li>)}</ol></div>
+  <section class="hero"><div class="shell"><p class="eyebrow">Practical study advice</p><h1>{data.question}</h1><p>{data.answer}</p><p class="muted">Reviewed by {data.reviewer} · Last updated: <time datetime={data.data_asof}>{data.data_asof}</time></p></div></section>
+  <div class="shell section detail-grid"><article><Content /><h2 class="mt-8">Current service fee information</h2><Fees /><Faq items={data.faq} /><h2 class="mt-8">Sources</h2><ul>{data.sources.map((source) => <li>{source === 'TODO' ? 'Contact us for the approved source and current fee schedule.' : <a href={source}>{source}</a>}</li>)}</ul><Contact /></article><aside class="card summary"><h2>Related programmes</h2><ul>{data.related.map((relative) => { const product = products.find((item) => productPath('en', item).replace('/en/', '/') === relative); return <li><a href={`/${lang}${relative}`}>{product?.name ?? 'Explore programme'}</a></li>; })}</ul><a class="button" href={`/${lang}/tools/find-my-program/`}>Find my program</a></aside></div>
+</Layout>

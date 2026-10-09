@@ -1,0 +1,29 @@
+---
+import Layout from '../../../layouts/Layout.astro';
+import ProductCards from '../../../components/ProductCards.astro';
+import Schools from '../../../components/Schools.astro';
+import Fees from '../../../components/Fees.astro';
+import Faq from '../../../components/Faq.astro';
+import Contact from '../../../components/Contact.astro';
+import countries from '../../../data/countries.json';
+import { languages, products, site, metadata, display } from '../../../lib/site';
+export function getStaticPaths() { return languages.flatMap((lang) => countries.map((country) => ({ params: { lang, country: country.id }, props: { country } }))); }
+const { lang } = Astro.params;
+const { country } = Astro.props;
+const items = products.filter((product) => product.country === country.id);
+const path = `/${lang}/study-in-${country.id}/`;
+const meta = metadata(`Study in ${country.name}: programmes and guidance`, lang!);
+const crumbs = [{ name: 'Home', path: `/${lang}/` }, { name: `Study in ${country.name}`, path }];
+---
+<Layout {...meta} lang={lang} path={path} crumbs={crumbs} faq={country.faq}>
+  <div class="shell"><ol class="breadcrumbs" aria-label="Breadcrumb">{crumbs.map((crumb) => <li><a href={crumb.path}>{crumb.name}</a></li>)}</ol></div>
+  <nav class="jump-nav" aria-label="Destination sections"><div class="shell"><a href="#overview">Overview</a><a href="#programmes">Programmes</a><a href="#costs">Costs</a><a href="#intakes">Intakes</a><a href="#visa">Visa steps</a><a href="#faq">FAQ</a></div></nav>
+  <section class="hero" id="overview"><div class="shell"><p class="eyebrow">Your destination guide</p><h1>Study in {country.name}</h1><p>{country.answer}</p><a class="button" href={`/${lang}/tools/find-my-program/`}>Find my program →</a></div></section>
+  <div class="shell">
+    <section id="programmes" class="section"><h2>Explore your programme</h2><ProductCards lang={lang!} items={items} /></section>
+    <section id="costs" class="section"><h2>Costs to plan for</h2><p>School tuition and entry requirements need confirmation. Service fees are separate from tuition and living costs.</p><Schools ids={items.flatMap((product) => product.schools)} costs /><h3 class="mt-8">Mingalar Edu service fees</h3><Fees items={items} /><p>USD to MMK exchange rate: {display(site.fx.usd_mmk)}. Rate updated: {display(site.fx.asof)}.</p></section>
+    <section id="intakes" class="section"><h2>Plan your intake</h2>{items.map((product) => <article class="card"><h3>{product.name}</h3><p>Intake: {display(product.intake.value)}. Confirm the application deadline and availability with our team.</p><p class="muted">Source: {product.intake.source === 'TODO' ? 'Contact us' : <a href={product.intake.source}>Intake source</a>} · Updated: {display(product.intake.asof)}</p></article>)}</section>
+    <section id="visa" class="section"><h2>Visa preparation, step by step</h2><ol>{country.visa_steps.map((step) => <li>{step}</li>)}</ol><p class="muted">These are preparation steps. Confirm current official instructions for your destination and circumstances.</p></section>
+    <Faq items={country.faq} /><p class="muted">Reviewed by {site.reviewer} · Last updated: <time datetime={site.updated}>{site.updated}</time></p><Contact />
+  </div>
+</Layout>

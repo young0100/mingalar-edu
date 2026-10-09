@@ -1,0 +1,12 @@
+{
+  "status": "draft",
+  "currency": "USD",
+  "asof": "2026-10-09",
+  "source": "TODO",
+  "rates": {
+    "CN-BACH-2027": { "stage1": 100, "stage2": 800, "rejected_stage2": 0, "source": "TODO", "asof": "2026-10-09" },
+    "EU-BACH-2027": { "stage1": 100, "stage2": 1200, "rejected_stage2": 0, "source": "TODO", "asof": "2026-10-09" },
+    "KR-JTU-2027": { "stage1": 100, "stage2": 800, "rejected_stage2": 0, "source": "TODO", "asof": "2026-10-09" }
+  },
+  "discount": { "value": 300000, "currency": "MMK", "valid_until": "2027-09-30", "source": "TODO", "asof": "2026-10-09" }
+}

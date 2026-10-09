@@ -1,0 +1,44 @@
+[
+  {
+    "id": "china",
+    "order": 1,
+    "name": "China",
+    "subtitle": "Explore bachelor programmes at Chinese universities",
+    "answer": "Mingalar Edu helps Myanmar students shortlist Chinese universities, prepare applications and organise visa documents. Explore the China bachelor product, then contact us to confirm your chosen school's entry requirements, tuition and intake.",
+    "locations": ["China"],
+    "visa_steps": ["Confirm the visa requirements for your chosen programme with our team.", "Prepare the required admission and supporting documents.", "Submit through the relevant official visa channel and await its decision.", "Confirm travel arrangements after receiving your visa."],
+    "faq": [
+      { "question": "Which Chinese universities can I explore?", "answer": "The China bachelor product lists the universities in our current shortlist. Contact us to confirm programme availability at your preferred school." },
+      { "question": "Can I study in English?", "answer": "Fudan University is listed for an English programme. Contact us to confirm the teaching language and entry requirements for your chosen programme." },
+      { "question": "What are the tuition and entry requirements?", "answer": "Contact us. Tuition and entry requirements need confirmation for your chosen school and programme." }
+    ]
+  },
+  {
+    "id": "europe",
+    "order": 2,
+    "name": "Europe",
+    "subtitle": "Explore Spain, Switzerland and Germany",
+    "answer": "Mingalar Edu helps Myanmar students explore the EU Business School bachelor product across Barcelona, Geneva, Munich and Digital options. Contact us to confirm your preferred campus, entry requirements and the application documents for your study plan.",
+    "locations": ["Spain", "Switzerland", "Germany"],
+    "visa_steps": ["Choose your study location and confirm the relevant visa requirements.", "Prepare the admission, financial and supporting documents requested by the official visa channel.", "Arrange the required submission or appointment.", "Await the official decision before confirming travel."],
+    "faq": [
+      { "question": "Which locations does the Europe product cover?", "answer": "EU Business School is listed with Barcelona, Geneva, Munich and Digital options. Contact us to confirm availability for your preferred study location." },
+      { "question": "Does every location use the same visa process?", "answer": "Visa requirements depend on your study destination and circumstances. Contact us to confirm the relevant official process before preparing documents." },
+      { "question": "Where can I confirm tuition and entry requirements?", "answer": "Contact us for the current programme details and official school information before making a commitment." }
+    ]
+  },
+  {
+    "id": "korea",
+    "order": 3,
+    "name": "Korea",
+    "subtitle": "Explore Jeju Tourism University",
+    "answer": "Mingalar Edu helps Myanmar students explore Jeju Tourism University, prepare application documents and plan visa documentation. Contact us to confirm your course, language requirements, tuition and intake before applying.",
+    "locations": ["Korea"],
+    "visa_steps": ["Confirm your course and the applicable visa requirements.", "Prepare the school's admission documents and required supporting evidence.", "Submit through the relevant official visa channel.", "Await the official decision and discuss pre-departure arrangements."],
+    "faq": [
+      { "question": "Which school is included in the Korea product?", "answer": "The Korea product covers Jeju Tourism University. Contact us to confirm the course options available for your study plan." },
+      { "question": "Do I need Korean language preparation?", "answer": "Contact us to confirm the language requirements for your chosen course and discuss preparation where appropriate." },
+      { "question": "Can I work while studying in Korea?", "answer": "Work permissions depend on your visa and course. Confirm the current official requirements before making work plans." }
+    ]
+  }
+]

@@ -1,0 +1,9 @@
+---
+import type { Faq } from '../lib/site';
+interface Props { items: Faq[] }
+const { items } = Astro.props;
+---
+<section id="faq" class="section">
+  <h2>Frequently asked questions</h2>
+  {items.map((item) => <details open><summary>{item.question}</summary><p>{item.answer}</p></details>)}
+</section>

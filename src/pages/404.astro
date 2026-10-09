@@ -1,0 +1,8 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { metadata } from '../lib/site';
+const meta = metadata('Page not found — find your next step', 'en');
+---
+<Layout {...meta} path="/404.html" noindex crumbs={[{ name: 'Home', path: '/en/' }, { name: 'Page not found', path: '/404.html' }]}>
+  <section class="hero"><div class="shell"><p class="eyebrow">Page not found</p><h1>Let’s find your next step.</h1><p>The page you requested could not be found. Explore our study destinations or speak with Mingalar Edu.</p><a class="button" href="/en/">Return to home</a></div></section>
+</Layout>
