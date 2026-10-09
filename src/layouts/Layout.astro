@@ -1,0 +1,54 @@
+---
+import '../styles/global.css';
+import { origin, site, schemas, type Crumb, type Faq } from '../lib/site';
+interface Props {
+  lang?: string; title: string; description: string; path: string;
+  crumbs: Crumb[]; faq?: Faq[]; product?: boolean; noindex?: boolean;
+  article?: { question: string; answer: string; data_asof: string; reviewer: string };
+}
+const { lang = 'en', title, description, path, crumbs, faq = [], article, product = false, noindex = false } = Astro.props;
+const paired = path.replace(/^\/(en|my)\//, '/');
+const enPath = path === '/' || noindex ? '/en/' : `/en${paired}`;
+const myPath = path === '/' || noindex ? '/my/' : `/my${paired}`;
+---
+<!doctype html>
+<html lang={lang}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    {noindex && <meta name="robots" content="noindex, follow" />}
+    <link rel="canonical" href={`${origin}${path}`} />
+    <link rel="alternate" hreflang="en" href={`${origin}${enPath}`} />
+    <link rel="alternate" hreflang="my" href={`${origin}${myPath}`} />
+    <link rel="alternate" hreflang="x-default" href={`${origin}${enPath}`} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={`${origin}${path}`} />
+    <meta property="og:type" content={article ? 'article' : 'website'} />
+    <meta property="og:site_name" content={site.brand} />
+    <meta property="og:image" content={`${origin}/images/mingalar-edu.webp`} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Mingalar Edu — study abroad guidance" />
+    <meta property="og:locale" content={lang === 'my' ? 'my_MM' : 'en_US'} />
+    <script type="application/ld+json" set:html={schemas(path, crumbs, faq, article)} />
+  </head>
+  <body class:list={{ 'product-page': product }}>
+    {lang === 'my' && <Fragment set:html="<!-- TODO: Burmese translation -->" />}
+    <a href="#main" class="sr-only focus:not-sr-only">Skip to content</a>
+    <header class="header"><div class="shell header-inner">
+      <a class="brand" href={`/${lang}/`}>{site.brand}<span class="text-gold">.</span></a>
+      <nav class="nav" aria-label="Main navigation">
+        <a href={`/${lang}/#destinations`}>Destinations</a>
+        <a href={`/${lang}/tools/find-my-program/`}>Find my program</a>
+        <a href={`/${lang}/guide/how-much-does-mingalar-edu-charge/`}>Fees &amp; advice</a>
+        <a href={lang === 'en' ? myPath : enPath} lang={lang === 'en' ? 'my' : 'en'}>{lang === 'en' ? 'မြန်မာ' : 'English'}</a>
+      </nav>
+    </div></header>
+    <main id="main"><slot /></main>
+    <footer class="footer"><div class="shell"><p class="brand">{site.brand}</p><p>Study abroad guidance for Myanmar students.</p><p><a href={`tel:${site.phone}`}>{site.phone_display}</a> · <a href={`mailto:${site.email}`}>{site.email}</a></p><a href="/">Choose language</a></div></footer>
+    <nav class="mobile-contact" aria-label="Contact Mingalar Edu">{site.channels.map((channel) => <a href={channel.url}>{channel.name}</a>)}</nav>
+  </body>
+</html>

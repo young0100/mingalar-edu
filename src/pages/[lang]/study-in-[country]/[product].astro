@@ -1,0 +1,34 @@
+---
+import Layout from '../../../layouts/Layout.astro';
+import Schools from '../../../components/Schools.astro';
+import Fees from '../../../components/Fees.astro';
+import Faq from '../../../components/Faq.astro';
+import Contact from '../../../components/Contact.astro';
+import countries from '../../../data/countries.json';
+import fees from '../../../data/fees.json';
+import { languages, products, site, display, metadata, productPath } from '../../../lib/site';
+import { feeLabel } from '../../../lib/fees.mjs';
+export function getStaticPaths() { return languages.flatMap((lang) => products.map((product) => ({ params: { lang, country: product.country, product: product.slug }, props: { product } }))); }
+const { lang } = Astro.params;
+const { product } = Astro.props;
+const country = countries.find((item) => item.id === product.country)!;
+const path = productPath(lang!, product);
+const meta = metadata(product.name, lang!);
+const crumbs = [{ name: 'Home', path: `/${lang}/` }, { name: country.name, path: `/${lang}/study-in-${country.id}/` }, { name: product.name, path }];
+---
+<Layout {...meta} lang={lang} path={path} crumbs={crumbs} faq={country.faq} product>
+  <div class="shell"><ol class="breadcrumbs" aria-label="Breadcrumb">{crumbs.map((crumb) => <li><a href={crumb.path}>{crumb.name}</a></li>)}</ol></div>
+  <section class="hero"><div class="shell"><p class="eyebrow">{product.code}</p><h1>{product.name}</h1><p class="mt-5">{product.tags.map((tag) => <span class="badge">{tag}</span>)}<span class="badge">Status: {product.status}</span></p><p>{product.overview}</p></div></section>
+  <nav class="jump-nav" aria-label="Programme tabs"><div class="shell"><a href="#overview">Overview</a><a href="#timeline">Timeline</a><a href="#included">Included &amp; excluded</a><a href="#schools">Schools</a><a href="#terms">Terms &amp; notes</a></div></nav>
+  <div class="shell section detail-grid">
+    <div>
+      <section class="section" id="overview"><h2>A programme built around your goals</h2><p>{product.overview}</p><p>We will help you confirm the school, language requirements and documents for your application. Your written service scope sets out the agreed support.</p></section>
+      <section class="section" id="timeline"><h2>Your application timeline</h2><ol>{product.timeline.map((step) => <li class="card"><h3>{step.name}</h3><p>{step.description}</p></li>)}</ol><p>Exact dates and deadlines: Contact us.</p></section>
+      <section class="section" id="included"><h2>What your support covers</h2><div class="grid gap-6 md:grid-cols-2"><div><h3>Included</h3><ul>{product.includes.map((item) => <li>{item}</li>)}</ul></div><div><h3>Excluded</h3><ul>{product.excludes.map((item) => <li>{item}</li>)}</ul></div></div></section>
+      <section class="section" id="schools"><h2>Explore the schools</h2><Schools ids={product.schools} /><Schools ids={product.schools} costs /></section>
+      <section class="section" id="terms"><h2>Terms and important notes</h2><ul>{product.terms.map((item) => <li>{item}</li>)}</ul><p class="notice"><strong>Only official accounts and receipts are valid.</strong> Confirm payment instructions directly with Mingalar Edu before sending funds.</p><h3>Service fees</h3><Fees items={[product]} /></section>
+      <Faq items={country.faq} /><p class="muted">Reviewed by {site.reviewer} · Last updated: {site.updated}</p><Contact code={product.code} />
+    </div>
+    <aside class="card summary" aria-label="Programme summary"><h2>Your programme at a glance</h2><dl><div><dt>Duration</dt><dd>{display(product.duration.value)}</dd></div><div><dt>Intake</dt><dd>{display(product.intake.value)}</dd></div><div><dt>Service fees</dt><dd>{feeLabel(product.code, fees, import.meta.env.SHOW_DRAFT_FEES)}</dd></div></dl><p class="mention">Mention code: <strong>{product.code}</strong></p><a class="button summary-cta" href={site.channels[0].url}>Discuss this programme</a><div class="actions mt-3">{site.channels.slice(1).map((channel) => <a href={channel.url}>{channel.name}</a>)}</div></aside>
+  </div>
+</Layout>

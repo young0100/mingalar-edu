@@ -1,0 +1,17 @@
+---
+import fees from '../data/fees.json';
+import { products, type Product } from '../lib/site';
+import { publicFees } from '../lib/fees.mjs';
+interface Props { items?: Product[] }
+const { items = products } = Astro.props;
+const visible = publicFees(fees, import.meta.env.SHOW_DRAFT_FEES);
+---
+{visible ? <div data-draft-fees>
+  <p class="notice">{fees.status === 'draft' ? 'Draft preview — fees are pending approval.' : 'Service fees'} Currency: {fees.currency}. Last updated: {fees.asof}. Confirm the written fee schedule before payment.</p>
+  <div class="table-wrap" tabindex="0" role="region" aria-label="Service fee table">
+    <table><thead><tr><th scope="col">Programme</th><th scope="col">Stage one</th><th scope="col">Stage two</th><th scope="col">Stage two if admission is unsuccessful</th></tr></thead>
+    <tbody>{items.map((product) => { const rate = fees.rates[product.code as keyof typeof fees.rates]; return <tr><th scope="row">{product.code}</th><td>{fees.currency} {rate.stage1}</td><td>{fees.currency} {rate.stage2}</td><td>{fees.currency} {rate.rejected_stage2}</td></tr>; })}</tbody></table>
+  </div>
+  <p>Voucher: {fees.discount.value.toLocaleString('en-US')} {fees.discount.currency}. Valid until {fees.discount.valid_until}. Contact us to confirm eligibility and terms.</p>
+  <p class="muted">Source: {fees.source === 'TODO' ? 'Contact us for the approved fee schedule' : <a href={fees.source}>Fee source</a>}</p>
+</div> : <p class="notice">Fees: contact us</p>}

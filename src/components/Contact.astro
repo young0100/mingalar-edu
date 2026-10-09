@@ -1,0 +1,12 @@
+---
+import { site } from '../lib/site';
+interface Props { code?: string }
+const { code } = Astro.props;
+---
+<section id="contact" class="contact">
+  <h2>Plan your next step with Mingalar Edu</h2>
+  <p>Tell us about your study goals. We will help you check the programme, documents and current costs before applying.</p>
+  {code && <p class="mention">Mention code: {code}</p>}
+  <div class="actions">{site.channels.map((channel) => <a class="button" href={channel.url}>{channel.name}</a>)}</div>
+  <p class="mt-4"><a href={`tel:${site.phone}`}>{site.phone_display}</a> · <a href={`mailto:${site.email}`}>{site.email}</a></p>
+</section>

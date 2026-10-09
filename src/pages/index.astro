@@ -1,0 +1,8 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { metadata } from '../lib/site';
+const meta = metadata('Choose your study abroad language', 'en');
+---
+<Layout {...meta} path="/" crumbs={[{ name: 'Choose language', path: '/' }]}>
+  <section class="hero"><div class="shell"><p class="eyebrow">Mingalar Edu</p><h1>Your study journey starts here.</h1><p>Explore study programmes in China, Europe and Korea. Choose a language to see destinations, application support and the next steps.</p><div class="actions"><a class="button" href="/en/" lang="en">English</a><a class="button secondary" href="/my/" lang="my">မြန်မာ</a></div><p class="mt-6 muted">The Myanmar edition currently uses English content. Burmese translation is in preparation.</p></div></section>
+</Layout>

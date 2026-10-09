@@ -1,0 +1,23 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Faq from '../../components/Faq.astro';
+import Contact from '../../components/Contact.astro';
+import ProductCards from '../../components/ProductCards.astro';
+import Schools from '../../components/Schools.astro';
+import countries from '../../data/countries.json';
+import home from '../../data/home.json';
+import { languages, products, metadata } from '../../lib/site';
+export function getStaticPaths() { return languages.map((lang) => ({ params: { lang } })); }
+const { lang } = Astro.params;
+const meta = metadata('Study in China, Europe and Korea', lang!);
+---
+<Layout {...meta} lang={lang} path={`/${lang}/`} crumbs={[{ name: 'Home', path: `/${lang}/` }]} faq={home.faq}>
+  <section class="hero"><div class="shell"><p class="eyebrow">Study abroad · Mingalar Edu</p><h1>Your ambition.<br />A clearer way forward.</h1><p>Mingalar Edu helps Myanmar students explore bachelor’s programmes in China, Europe and Korea, prepare applications and plan the steps towards studying abroad.</p><div class="actions"><a class="button" href={`/${lang}/tools/find-my-program/`}>Find my program →</a><a class="button secondary" href="#destinations">Explore destinations</a></div></div></section>
+  <div class="shell">
+    <section class="section" id="destinations"><p class="eyebrow">Start with a destination</p><h2>Where will your next chapter begin?</h2><div class="grid-cards">{[...countries].sort((a,b) => a.order - b.order).map((country) => <a class="card country-card" href={`/${lang}/study-in-${country.id}/`}><h3 class="text-2xl">{country.name} →</h3><p>{country.subtitle}</p><p class="muted">{country.locations.join(' · ')}</p></a>)}</div></section>
+    <section class="section"><p class="eyebrow">Explore your options</p><h2>Programmes with a plan</h2><ProductCards lang={lang!} items={products} /></section>
+    <section class="section" id="process"><h2>From first conversation to departure</h2><ol class="grid-cards list-none p-0">{home.steps.map((step) => <li class="card"><h3>{step.name}</h3><p>{step.description}</p></li>)}</ol></section>
+    <section class="section"><h2>Schools in our programme directory</h2><p>Availability and entry requirements need confirmation for your chosen intake.</p><Schools /></section>
+    <Faq items={home.faq} /><Contact />
+  </div>
+</Layout>

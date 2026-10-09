@@ -1,0 +1,15 @@
+{
+  "answer": "Mingalar Edu helps Myanmar students explore study options in China, Europe and Korea, prepare university applications and organise visa documents. Choose a destination or use Find my program to start your conversation with our team.",
+  "steps": [
+    { "name": "Explore your options", "description": "Discuss your goals and shortlist a country, school and programme." },
+    { "name": "Prepare your application", "description": "Confirm requirements, organise documents and follow up with admissions." },
+    { "name": "Plan your departure", "description": "Prepare visa documents and discuss pre-departure arrangements." }
+  ],
+  "faq": [
+    { "question": "How much does it cost to use Mingalar Edu's services?", "answer": "Service fees vary depending on the destination and product you choose. Fees: contact us. Ask for a written breakdown of the service scope, included support and excluded costs before payment." },
+    { "question": "What if my visa gets rejected?", "answer": "Contact us to review the decision and discuss possible next steps. Any further application support and its cost must be agreed before proceeding." },
+    { "question": "Do I need to speak the local language before applying?", "answer": "Language requirements depend on the school and programme. Contact us to confirm the teaching language and discuss language preparation for your chosen destination." },
+    { "question": "Can I work while studying abroad?", "answer": "Work permissions depend on your destination, visa and course. Ask our team about the current requirements for your chosen destination before making work plans." },
+    { "question": "How can Mingalar Edu support my study plans?", "answer": "We help you explore destinations based on your goals and budget, prepare university applications, and plan for life abroad. Contact us to discuss the support available for your chosen destination." }
+  ]
+}

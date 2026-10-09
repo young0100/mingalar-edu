@@ -1,0 +1,8 @@
+node_modules/
+dist/
+.astro/
+.omc/
+.omx/
+.env
+.env.*
+!.env.example
