@@ -1,11 +1,18 @@
 ---
 import schools from '../data/schools.json';
-import { display } from '../lib/site';
+import { known } from '../lib/site';
 interface Props { ids?: string[]; costs?: boolean }
 const { ids, costs = false } = Astro.props;
 const items = ids ? schools.filter((school) => ids.includes(school.id)) : schools;
+const facts = (fact: { value: unknown; source: string; asof: string }) => known(fact.value) ? fact : null;
+const rows = items.map((school) => ({ school, tuition: facts(school.tuition), requirements: facts(school.requirements) })).filter((row) => row.tuition || row.requirements);
+const pending = items.some((school) => !known(school.tuition.value) || !known(school.requirements.value));
+const cell = (fact: ReturnType<typeof facts>) => fact ? String(fact.value) : '—';
 ---
-{costs ? <div class="table-wrap" tabindex="0" role="region" aria-label="School costs and requirements">
-  <table><thead><tr><th scope="col">School</th><th scope="col">Tuition</th><th scope="col">Requirements</th><th scope="col">Source / updated</th></tr></thead>
-  <tbody>{items.map((school) => <tr><th scope="row">{school.name}</th><td>{display(school.tuition.value)}</td><td>{display(school.requirements.value)}</td><td>Tuition: {school.tuition.source === 'TODO' ? 'Contact us' : <a href={school.tuition.source}>Source</a>} / {display(school.tuition.asof)}<br />Requirements: {school.requirements.source === 'TODO' ? 'Contact us' : <a href={school.requirements.source}>Source</a>} / {display(school.requirements.asof)}</td></tr>)}</tbody></table>
+{costs ? <div>
+  {rows.length > 0 && <div class="table-wrap" tabindex="0" role="region" aria-label="School costs and requirements">
+    <table><thead><tr><th scope="col">School</th><th scope="col">Tuition</th><th scope="col">Requirements</th><th scope="col">Source / updated</th></tr></thead>
+    <tbody>{rows.map(({ school, tuition, requirements }) => <tr><th scope="row">{school.name}</th><td>{cell(tuition)}</td><td>{cell(requirements)}</td><td>{[tuition, requirements].filter((fact) => fact && known(fact.source)).map((fact) => <span><a href={fact!.source}>Source</a>{known(fact!.asof) && ` / ${fact!.asof}`} </span>)}</td></tr>)}</tbody></table>
+  </div>}
+  {pending && <p class="muted">Ask us for the latest figures.</p>}
 </div> : <ul class="grid-cards list-none p-0">{items.map((school) => <li class="card"><h3>{school.name}</h3>{school.locations.length > 0 && <p>{school.locations.join(' · ')}</p>}<p class="muted">{school.role}</p></li>)}</ul>}

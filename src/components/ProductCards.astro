@@ -1,15 +1,15 @@
 ---
-import { display, productPath, type Product } from '../lib/site';
+import { known, productPath, type Product } from '../lib/site';
 interface Props { lang: string; items: Product[] }
 const { lang, items } = Astro.props;
 ---
 <div class="grid-cards">
   {items.map((product) => <article class="card">
     <p class="eyebrow">{product.code}</p>
-    <span class="badge">{product.status}</span>
+    {known(product.status) && <span class="badge">{product.status}</span>}
     <h3 class="mt-3"><a href={productPath(lang, product)}>{product.name}</a></h3>
     <p>{product.overview}</p>
-    <p class="muted">Intake: {display(product.intake.value)}</p>
+    {known(product.intake.value) && <p class="muted">Intake: {product.intake.value}</p>}
     <a class="button secondary" href={productPath(lang, product)}>Explore programme →</a>
   </article>)}
 </div>

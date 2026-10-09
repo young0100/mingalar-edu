@@ -89,7 +89,7 @@ for (const file of files) {
       check(faqs.length === 1, `${relative}: missing unique FAQPage`);
       for (const faq of faqs) {
         check(Array.isArray(faq.mainEntity) && faq.mainEntity.length > 0, `${relative}: empty FAQPage`);
-        const visibleFaq = [...text.matchAll(/<details\b[^>]*>\s*<summary\b[^>]*>([\s\S]*?)<\/summary>([\s\S]*?)<\/details>/gi)].map((match) => ({ question: plain(match[1]), answer: plain(match[2]) }));
+        const visibleFaq = [...text.matchAll(/<details\b[^>]*\bdata-faq\b[^>]*>\s*<summary\b[^>]*>([\s\S]*?)<\/summary>([\s\S]*?)<\/details>/gi)].map((match) => ({ question: plain(match[1]), answer: plain(match[2]) }));
         check(visibleFaq.length === faq.mainEntity?.length, `${relative}: visible FAQ count differs from JSON-LD`);
         for (const question of faq.mainEntity ?? []) {
           check(visible.includes(plain(question.name ?? '')), `${relative}: FAQ question absent from static text`);
