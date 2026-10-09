@@ -6,7 +6,7 @@ import Faq from '../../../components/Faq.astro';
 import Contact from '../../../components/Contact.astro';
 import countries from '../../../data/countries.json';
 import fees from '../../../data/fees.json';
-import { languages, products, site, display, metadata, productPath } from '../../../lib/site';
+import { languages, products, site, known, metadata, productPath } from '../../../lib/site';
 import { feeLabel } from '../../../lib/fees.mjs';
 export function getStaticPaths() { return languages.flatMap((lang) => products.map((product) => ({ params: { lang, country: product.country, product: product.slug }, props: { product } }))); }
 const { lang } = Astro.params;
@@ -18,7 +18,7 @@ const crumbs = [{ name: 'Home', path: `/${lang}/` }, { name: country.name, path:
 ---
 <Layout {...meta} lang={lang} path={path} crumbs={crumbs} faq={country.faq} product>
   <div class="shell"><ol class="breadcrumbs" aria-label="Breadcrumb">{crumbs.map((crumb) => <li><a href={crumb.path}>{crumb.name}</a></li>)}</ol></div>
-  <section class="hero"><div class="shell"><p class="eyebrow">{product.code}</p><h1>{product.name}</h1><p class="mt-5">{product.tags.map((tag) => <span class="badge">{tag}</span>)}<span class="badge">Status: {product.status}</span></p><p>{product.overview}</p></div></section>
+  <section class="hero"><div class="shell"><p class="eyebrow">{product.code}</p><h1>{product.name}</h1><p class="mt-5">{product.tags.map((tag) => <span class="badge">{tag}</span>)}{known(product.status) && <span class="badge">Status: {product.status}</span>}</p><p>{product.overview}</p></div></section>
   <nav class="jump-nav" aria-label="Programme tabs"><div class="shell"><a href="#overview">Overview</a><a href="#timeline">Timeline</a><a href="#included">Included &amp; excluded</a><a href="#schools">Schools</a><a href="#terms">Terms &amp; notes</a></div></nav>
   <div class="shell section detail-grid">
     <div>
@@ -29,6 +29,7 @@ const crumbs = [{ name: 'Home', path: `/${lang}/` }, { name: country.name, path:
       <section class="section" id="terms"><h2>Terms and important notes</h2><ul>{product.terms.map((item) => <li>{item}</li>)}</ul><p class="notice"><strong>Only official accounts and receipts are valid.</strong> Confirm payment instructions directly with Mingalar Edu before sending funds.</p><h3>Service fees</h3><Fees items={[product]} /></section>
       <Faq items={country.faq} /><p class="muted">Reviewed by {site.reviewer} · Last updated: {site.updated}</p><Contact code={product.code} />
     </div>
-    <aside class="card summary" aria-label="Programme summary"><h2>Your programme at a glance</h2><dl><div><dt>Duration</dt><dd>{display(product.duration.value)}</dd></div><div><dt>Intake</dt><dd>{display(product.intake.value)}</dd></div><div><dt>Service fees</dt><dd>{feeLabel(product.code, fees, import.meta.env.SHOW_DRAFT_FEES)}</dd></div></dl><p class="mention">Mention code: <strong>{product.code}</strong></p><a class="button summary-cta" href={site.channels[0].url}>Discuss this programme</a><div class="actions mt-3">{site.channels.slice(1).map((channel) => <a href={channel.url}>{channel.name}</a>)}</div></aside>
+    <aside class="card summary" aria-label="Programme summary"><h2>Your programme at a glance</h2><dl>{known(product.duration.value) && <div><dt>Duration</dt><dd>{product.duration.value}</dd></div>}{known(product.intake.value) && <div><dt>Intake</dt><dd>{product.intake.value}</dd></div>}<div><dt>Service fees</dt><dd>{feeLabel(product.code, fees, import.meta.env.SHOW_DRAFT_FEES)}</dd></div></dl><p class="mention">Mention code: <strong>{product.code}</strong></p><a class="button summary-cta" href={site.channels[0].url}>Discuss this programme</a><div class="actions mt-3">{site.channels.slice(1).map((channel) => <a href={channel.url}>{channel.name}</a>)}</div></aside>
+    <details class="summary-sheet" aria-label="Programme summary"><summary><span><strong>{product.code}</strong> · Discuss this programme</span><span class="chevron" aria-hidden="true">▲</span></summary><div class="sheet-body"><dl>{known(product.duration.value) && <div><dt>Duration</dt><dd>{product.duration.value}</dd></div>}{known(product.intake.value) && <div><dt>Intake</dt><dd>{product.intake.value}</dd></div>}<div><dt>Service fees</dt><dd>{feeLabel(product.code, fees, import.meta.env.SHOW_DRAFT_FEES)}</dd></div></dl><p class="mention">Mention code: <strong>{product.code}</strong></p><div class="sheet-actions">{site.channels.map((channel) => <a class="button secondary" href={channel.url}>{channel.name}</a>)}</div></div></details>
   </div>
 </Layout>

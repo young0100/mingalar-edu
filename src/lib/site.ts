@@ -7,6 +7,7 @@ export type Product = typeof products[number];
 export type Faq = { question: string; answer: string };
 export type Crumb = { name: string; path: string };
 export const origin = 'https://mingalaredu.com';
+export const known = (value: unknown) => value !== 'TODO' && value !== 'Contact us' && value !== '' && value != null;
 export const display = (value: string | number) => value === 'TODO' ? 'Contact us' : String(value);
 export const productPath = (lang: string, product: Product) => `/${lang}/study-in-${product.country}/${product.slug}/`;
 export const metadata = (subject: string, lang: string, suffix = 'Study abroad advice') => {
